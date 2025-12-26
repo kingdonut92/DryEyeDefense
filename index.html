@@ -952,13 +952,28 @@
           pl.vy=Math.min(pl.vy,120);
         }
 
-        // despawn behind camera
-        if(e.x+e.w<cx-140){
-          en.splice(i,1);
-          continue;
-        }
-      }
+        // keep boss-family enemies from despawning behind the camera (tether them just off the left edge)
+const isBossFamily =
+  e.isBig ||                       // big/boss-class flag (covers grey boss + main purple boss)
+  e.isMini ||                      // mini variants (covers miniBoss and grey minis)
+  e.type === 'boss' ||
+  e.type === 'miniBoss' ||
+  e.type === 'greyBoss' ||
+  (typeof e.type === 'string' && e.type.toLowerCase().includes('boss')); // any future "Boss" type
 
+if (isBossFamily) {
+  const tetherX = cx - 18; // slightly off-screen left
+  if (e.x + e.w < tetherX) {
+    e.x = tetherX - e.w;
+    if (e.vx < 0) e.vx = 0;
+  }
+} else {
+  // despawn small/regular germs behind camera
+  if (e.x + e.w < cx - 140) {
+    en.splice(i, 1);
+    continue;
+  }
+}
       // vials
       for(let i=vials.length-1;i>=0;i--){
         const v=vials[i];
@@ -1147,3 +1162,4 @@
   </script>
 </body>
 </html>
+
