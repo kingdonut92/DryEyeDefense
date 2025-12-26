@@ -934,8 +934,8 @@
         }
         if(!en[i]) continue; // enemy may have been removed by kill()
         // stomp
-        const stomping=(pl.vy>0&&pl.stompT<=0&&ovHB(pl,e)&&(pl.y+pl.h-e.y)<14);
-            if(stomping){
+       const stomping=(pl.vy>0&&pl.stompT<=0&&ovHB(pl,e)&&(pl.y+pl.h-e.y)<14);
+        if(stomping){
           pl.vy=JS*0.55;
           pl.stompT=0.12;
           kill(i,'stomp');
@@ -951,30 +951,31 @@
           pl.x+=push*12;
           pl.vy=Math.min(pl.vy,120);
         }
-      }
 
         // keep boss-family enemies from despawning behind the camera (tether them just off the left edge)
-const isBossFamily =
-  e.isBig ||                       // big/boss-class flag (covers grey boss + main purple boss)
-  e.isMini ||                      // mini variants (covers miniBoss and grey minis)
-  e.type === 'boss' ||
-  e.type === 'miniBoss' ||
-  e.type === 'greyBoss' ||
-  (typeof e.type === 'string' && e.type.toLowerCase().includes('boss')); // any future "Boss" type
+        const isBossFamily =
+          e.isBig ||
+          e.isMini ||
+          e.type === 'boss' ||
+          e.type === 'miniBoss' ||
+          e.type === 'greyBoss' ||
+          (typeof e.type === 'string' && e.type.toLowerCase().includes('boss'));
 
-if (isBossFamily) {
-  const tetherX = cx - 18; // slightly off-screen left
-  if (e.x + e.w < tetherX) {
-    e.x = tetherX - e.w;
-    if (e.vx < 0) e.vx = 0;
-  }
-} else {
-  // despawn small/regular germs behind camera
-  if (e.x + e.w < cx - 140) {
-    en.splice(i, 1);
-    continue;
-  }
-}
+        if(isBossFamily){
+          const tetherX=cx-18; // slightly off-screen left
+          if(e.x+e.w<tetherX){
+            e.x=tetherX-e.w;
+            if(e.vx<0) e.vx=0;
+          }
+        }else{
+          // despawn small/regular germs behind camera
+          if(e.x+e.w<cx-140){
+            en.splice(i,1);
+            continue;
+          }
+        }
+      }
+
       // vials
       for(let i=vials.length-1;i>=0;i--){
         const v=vials[i];
@@ -1163,5 +1164,4 @@ if (isBossFamily) {
   </script>
 </body>
 </html>
-
 
