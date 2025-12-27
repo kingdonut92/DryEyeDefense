@@ -13,6 +13,8 @@ Controls
 
 Built with pure HTML5 Canvas + JavaScript
 
-this is v0.1, first playable public build.
+this is v0.1, first playable public build. -12/26/2025
 
 I am currently designing all the audio, which will be patched into the game soon!
+
+v0.2 Fixed minor bug and syntax errors, added new splash and water physics plus additional jump mechanic. -12/27/2025
