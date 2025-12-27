@@ -333,7 +333,9 @@
     function onMiniXY(x,y){mini=Math.max(0,mini-1);if(!en.some(z=>z.type==='miniBoss')){mini=0;vial(x,y,true);}}
     function onGreyXY(x,y){greyMini=Math.max(0,greyMini-1);if(greyMini===0&&greyPend){greyPend=false;vial(x-8,y,true);vial(x+8,y,true);}}
 
-    function spawnTearSplash(x,y){for(let i=0;i<10;i++) tearSplashes.push({x,y,vx:(Math.random()*2-1)*140,vy:(Math.random()*2-1)*140,t:0,life:.35});}
+    function spawnTearSplash(x,y){
+      for(let i=0;i<10;i++) tearSplashes.push({x,y,vx:(Math.random()*2-1)*140,vy:(Math.random()*2-1)*140,t:0,life:.35});
+    }
 
     const popCol=t=>{
       if(t==='red') return '#8a0f0f';
@@ -922,22 +924,26 @@
         for(let j=bullets.length-1;j>=0;j--){
           const b=bullets[j];
           if(ovHB(b,e)){
+            // splash at impact
+            spawnTearSplash(b.x+b.w*0.5,b.y+b.h*0.5);
             bullets.splice(j,1);
             e.hp=(e.hp|0)-1;
             e.slow=1;
             e.slowTimer=0.08;
-            if(e.hp<=0){
-              kill(i,'shot');
-            }
+            if(e.hp<=0) kill(i,'shot');
             break;
           }
         }
+
         if(!en[i]) continue; // enemy may have been removed by kill()
-        // stomp
-       const stomping=(pl.vy>0&&pl.stompT<=0&&ovHB(pl,e)&&(pl.y+pl.h-e.y)<14);
+
+        // stomp (restore bounce/jump feel)
+        const stomping=(pl.vy>0&&pl.stompT<=0&&ovHB(pl,e)&&(pl.y+pl.h-e.y)<14);
         if(stomping){
-          pl.vy=JS*0.55;
+          pl.vy=JS*0.72; // bounce
+          pl.onGround=false;
           pl.stompT=0.12;
+          spawnTearSplash(e.x+e.w*0.5,e.y+2);
           kill(i,'stomp');
           continue;
         }
@@ -953,26 +959,44 @@
         }
 
         // keep boss-family enemies from despawning behind the camera (tether them just off the left edge)
-        const isBossFamily =
+        const isBossFamily=
           e.isBig ||
           e.isMini ||
-          e.type === 'boss' ||
-          e.type === 'miniBoss' ||
-          e.type === 'greyBoss' ||
-          (typeof e.type === 'string' && e.type.toLowerCase().includes('boss'));
+          e.type==='boss' ||
+          e.type==='miniBoss' ||
+          e.type==='greyBoss' ||
+          (typeof e.type==='string' && e.type.toLowerCase().includes('boss'));
 
         if(isBossFamily){
-          const tetherX=cx-18; // slightly off-screen left
+          const tetherX=cx-18;
           if(e.x+e.w<tetherX){
             e.x=tetherX-e.w;
             if(e.vx<0) e.vx=0;
           }
         }else{
-          // despawn small/regular germs behind camera
           if(e.x+e.w<cx-140){
             en.splice(i,1);
             continue;
           }
+        }
+      }
+
+      // --- water trail behind eyeball while rolling ---
+      if(pl.onGround && Math.abs(pl.vx)>20){
+        const rate=clamp(Math.abs(pl.vx)/MS,0.35,1.0);
+        const n=(Math.random()<0.60*rate)?1:0;
+        for(let k=0;k<n;k++){
+          const backX=pl.x+pl.w*0.5 - pl.facing*(10+Math.random()*6);
+          const footY=pl.y+pl.h-2;
+          droplets.push({
+            x:backX+(Math.random()*4-2),
+            y:footY+(Math.random()*2-1),
+            vx:(-pl.facing)*(40+Math.random()*70) + (Math.random()*20-10),
+            vy:-(25+Math.random()*55),
+            age:0,
+            life:0.16+Math.random()*0.12,
+            s:(Math.random()<0.75?1:2)
+          });
         }
       }
 
@@ -1158,10 +1182,11 @@
     resize();
     touch();
     ensure();
+    // tiny sanity-checks (safe in production; no-op unless something is broken)
+    if(typeof spawnTearSplash!=='function') throw new Error('spawnTearSplash missing');
     requestAnimationFrame(loop);
 
   })();
   </script>
 </body>
 </html>
-
