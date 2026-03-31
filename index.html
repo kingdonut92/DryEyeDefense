@@ -11,12 +11,65 @@
     #wrap{position:relative;line-height:0}
     #game{display:block;border:4px solid #222;background:#000;touch-action:none;image-rendering:pixelated;image-rendering:crisp-edges}
     #ui{position:absolute;left:4px;top:4px;pointer-events:none;image-rendering:auto}
-    #touch-controls{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px 8px 6px;margin-top:-64px;box-sizing:border-box}
-    #touch-controls button{padding:12px 10px;font-size:16px;border-radius:14px;border:2px solid #333;background:#1b2535;color:#f0f8ff;text-shadow:0 1px 0 #000;box-shadow:0 2px 0 #000;touch-action:none;user-select:none;-webkit-user-select:none}
-    #touch-controls button:active{transform:translateY(1px);box-shadow:0 1px 0 #000}
     @media (min-width:900px){#touch-controls{display:none}}
-    #touch-controls button[data-action="shop"]{grid-column:1/span 2}
-    #touch-controls button[data-action="pause"]{grid-column:3/span 2}
+    #touch-controls{
+      width:100%;display:flex;align-items:center;justify-content:space-between;
+      padding:6px 12px 8px;box-sizing:border-box;gap:8px;
+      background:#0d1520;border-top:2px solid #1e2d42;
+    }
+    /* ── D-pad ── */
+    #dpad{position:relative;width:129px;height:129px;flex-shrink:0;}
+    #dpad button{
+      position:absolute;touch-action:none;user-select:none;-webkit-user-select:none;
+      background:#1e2d42;border:2px solid #2e4460;color:#8bd9ff;
+      font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;
+      box-shadow:0 3px 0 #0a1020;
+    }
+    #dpad button:active{box-shadow:0 1px 0 #0a1020;transform:translateY(2px);}
+    #dpad button[data-action="left"],
+    #dpad button[data-action="right"]{width:43px;height:43px;top:43px;border-radius:4px;}
+    #dpad button[data-action="up"],
+    #dpad button[data-action="down"]{width:43px;height:43px;left:43px;border-radius:4px;}
+    #dpad button[data-action="left"]{left:0;}
+    #dpad button[data-action="right"]{right:0;}
+    #dpad button[data-action="up"]{top:0;}
+    #dpad button[data-action="down"]{bottom:0;}
+    #dpad-center{
+      position:absolute;left:43px;top:43px;width:43px;height:43px;
+      background:#172236;border-radius:3px;pointer-events:none;box-sizing:border-box;
+    }
+    #dpad button{box-sizing:border-box;}
+    /* ── Utility buttons (B / PAUSE) ── */
+    #util-btns{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+    #util-btns button{
+      padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.05em;
+      border-radius:8px;border:2px solid #2e4460;background:#172236;
+      color:#7aadcc;text-transform:uppercase;touch-action:none;
+      user-select:none;-webkit-user-select:none;
+      box-shadow:0 2px 0 #0a1020;min-width:52px;
+    }
+    #util-btns button:active{transform:translateY(1px);box-shadow:0 1px 0 #0a1020;}
+    /* ── Action buttons (J / S) ── */
+    #action-btns{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+    #action-btns button{
+      width:65px;height:65px;border-radius:50%;border:3px solid;
+      font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;
+      touch-action:none;user-select:none;-webkit-user-select:none;
+      text-shadow:0 1px 2px rgba(0,0,0,.7);
+    }
+    #action-btns button:active{transform:scale(0.93);}
+    #action-btns button[data-action="jump"]{
+      background:radial-gradient(circle at 40% 35%,#3a7fff,#1a4fcc);
+      border-color:#5a9fff;color:#d0eaff;
+      box-shadow:0 4px 0 #0d2a70,0 0 14px rgba(60,130,255,.45);
+    }
+    #action-btns button[data-action="shoot"]{
+      background:radial-gradient(circle at 40% 35%,#ff5566,#bb1122);
+      border-color:#ff8899;color:#ffe0e4;
+      box-shadow:0 4px 0 #6a0010,0 0 14px rgba(255,60,80,.45);
+    }
+    #action-btns button[data-action="jump"]:active{box-shadow:0 1px 0 #0d2a70,0 0 8px rgba(60,130,255,.3);}
+    #action-btns button[data-action="shoot"]:active{box-shadow:0 1px 0 #6a0010,0 0 8px rgba(255,60,80,.3);}
   </style>
 </head>
 <body>
@@ -28,12 +81,24 @@
   </div>
 
   <div id="touch-controls">
-    <button data-action="shop">B</button>
-    <button data-action="pause">PAUSE</button>
-    <button data-action="left">&#9664;</button>
-    <button data-action="right">&#9654;</button>
-    <button data-action="jump">J</button>
-    <button data-action="shoot">S</button>
+    <!-- D-pad -->
+    <div id="dpad">
+      <button data-action="up">&#9650;</button>
+      <button data-action="left">&#9664;</button>
+      <button data-action="right">&#9654;</button>
+      <button data-action="down">&#9660;</button>
+      <div id="dpad-center"></div>
+    </div>
+    <!-- Utility: Shop + Pause -->
+    <div id="util-btns">
+      <button data-action="shop">SHOP</button>
+      <button data-action="pause">PAUSE</button>
+    </div>
+    <!-- Action: Jump + Shoot -->
+    <div id="action-btns">
+      <button data-action="shoot">S</button>
+      <button data-action="jump">J</button>
+    </div>
   </div>
 
   <script>
@@ -205,7 +270,7 @@
         if(pl.artT>0||pl.artCd>0) return false;
         coinsN-=u.cost|0;
         pl.artT=15;
-        pl.artCd=30; // 15 active + 15 cooldown
+        pl.artCd=30;
         toast('Artificial Tears!',1);
         return true;
       }
@@ -220,10 +285,12 @@
     const buyByKey=code=>buy(ups.find(u=>u.key===code));
 
     let last=0,cx=0;
-    const bullets=[],en=[],vials=[],splats=[],pops=[],coinDrops=[],tearSplashes=[],droplets=[],deadGerms=[];
+    const bullets=[],en=[],vials=[],splats=[],pops=[],coinDrops=[],tearSplashes=[],droplets=[],deadGerms=[],coinSparkles=[];
+    // ── NEW: Artificial Tears drops (rare boss loot) ──────────────────────────
+    const artTearDrops=[];
     let kills=0,nextBoss=20,nextGrey=100,spT=0,deadT=0,mini=0,greyMini=0,greyPend=false;
 
-    const plats=[{x:0,y:140,w:260,h:10,vy:0}];
+    const plats=[{x:0,y:162,w:260,h:10,vy:0}];
 
     function land(b,pad=18){
       const isPlayer=(b===pl);
@@ -243,7 +310,7 @@
       const Lw=cx-100,Rw=cx+W+200;
       for(let i=plats.length-1;i>=0;i--){
         const p=plats[i];
-        const g=(p.y===140&&p.h===10);
+        const g=(p.y===162&&p.h===10);
         const cut=g?(Lw-2000):(Lw-200);
         if(p.x+p.w<cut) plats.splice(i,1);
       }
@@ -252,7 +319,7 @@
       for(const p of plats) rm=Math.max(rm,p.x+p.w);
       while(rm<Rw){
         const w=80+Math.random()*80,x=rm;
-        const g={x:x,y:140,w:w,h:10,vy:0};
+        const g={x:x,y:162,w:w,h:10,vy:0};
         plats.push(g);
         if(Math.random()<.45){
           const c=g.x+10+Math.random()*Math.max(10,g.w-20);
@@ -261,14 +328,14 @@
         if(Math.random()<.45){
           const mw=40+Math.random()*40;
           const mx=x+10+Math.random()*Math.max(10,w-mw-20);
-          const m={x:mx,y:95,w:mw,h:8,vy:0};
+          const m={x:mx,y:117,w:mw,h:8,vy:0};
           plats.push(m);
           if(Math.random()<.6) coinDrops.push({x:m.x+m.w/2-4,y:m.y-30,w:14,h:10,vy:0,kind:'gold',val:1});
         }
         if(Math.random()<.25){
           const hw=40+Math.random()*40;
           const hx=x+10+Math.random()*Math.max(10,w-hw-20);
-          const hi={x:hx,y:60,w:hw,h:8,vy:0};
+          const hi={x:hx,y:82,w:hw,h:8,vy:0};
           plats.push(hi);
           if(Math.random()<.7) coinDrops.push({x:hi.x+hi.w/2-4,y:hi.y-30,w:14,h:10,vy:0,kind:'gold',val:1});
         }
@@ -279,18 +346,52 @@
     function spawnBoss(){
       if(kills>=nextBoss){
         nextBoss+=20;
-        en.push({x:cx+W+40,y:110,vx:0,vy:0,w:27,h:27,hitPad:4,type:'boss',hp:20,isBig:true});
+        en.push({x:cx+W+40,y:132,vx:0,vy:0,w:27,h:27,hitPad:4,type:'boss',hp:20,isBig:true});
       }
       if(kills>=nextGrey){
         const alive=en.some(e=>e.type==='greyBoss'&&!e.isMini);
         if(!alive){
           nextGrey+=100;
-          en.push({x:cx+W+60,y:80,vx:0,vy:0,w:54,h:54,hitPad:8,type:'greyBoss',hp:40,isBig:true,isMini:false});
+          en.push({x:cx+W+60,y:102,vx:0,vy:0,w:54,h:54,hitPad:8,type:'greyBoss',hp:40,isBig:true,isMini:false});
         }
       }
     }
 
-    const spl=e=>{for(let n=0;n<4;n++) splats.push({x:e.x+(Math.random()*28-14),y:e.y+e.h+(Math.random()*16-8),type:e.type,t:0,life:.6+Math.random()*.6,sc:1+Math.random()*.6});};
+    const spl=e=>{
+      // Stomp splat — goo squirts sideways from the squash point
+      const cols=popCol(e.type);
+      const cx0=e.x+e.w*0.5, cy0=e.y+e.h*0.5;
+      const n=12+Math.floor(Math.random()*6);
+      for(let i=0;i<n;i++){
+        // Alternate sides so blobs spray both left AND right
+        const side=(i%2===0)?1:-1;
+        // Angle in range [0, ~50deg] from horizontal, then flip for side
+        const baseA=Math.random()*0.85;
+        const vx0=side*Math.cos(baseA)*(80+Math.random()*180);
+        const vy0=-(10+Math.random()*70);
+        const size=2+Math.random()*6;
+        pops.push({
+          x:cx0+(Math.random()*e.w*0.6-e.w*0.3),
+          y:cy0+(Math.random()*e.h*0.3),
+          vx:vx0, vy:vy0,
+          t:0, life:0.5+Math.random()*0.35, size, cols,
+          splat:false, splatT:0, splatLife:0.6+Math.random()*0.3,
+          splatX:0, splatY:0, drag:0.84+Math.random()*0.08,
+          stretch:1, wobble:Math.random()*Math.PI*2,
+        });
+      }
+      for(let i=0;i<6;i++){
+        const side=(i%2===0)?1:-1;
+        pops.push({
+          x:cx0+(Math.random()*e.w*0.8-e.w*0.4), y:e.y+e.h,
+          vx:side*(100+Math.random()*220), vy:-(5+Math.random()*40),
+          t:0, life:0.35+Math.random()*0.2, size:1+Math.random()*2.5, cols,
+          splat:false, splatT:0, splatLife:0.4,
+          splatX:0, splatY:0, drag:0.80+Math.random()*0.08,
+          stretch:1, wobble:Math.random()*Math.PI*2,
+        });
+      }
+    };
     const MAP={
       death:["   rrr   ","  rpppr  "," rprrrpr "," rprddpr "," rprddpr "," rprrrpr ","  rpppr  ","   rrr   ","         "],
       eye:["   aaa   ","  awwwa  "," awbbbbw "," awbddbw "," awbddbw "," awbbhbw ","  awwwa  ","   aaa   ","         "],
@@ -319,6 +420,8 @@
       scoin:{s:'#cfd8e6',w:'#ffffff'},
       bigv:{w:'#fff',r:'#ff3030','+':'#58ff9a'},
       tearBox:{k:'#000000',b:'#58c4ff',w:'#ffffff'},
+      // ── NEW: Artificial Tears drop — deep navy/dark blue palette ──────────
+      artTear:{k:'#001433',b:'#1a6fff',w:'#ffe44a'},
       rs:{r:'#7b0000',h:'#ff5a5a'},
       gs:{g:'#1f5a22',k:'#6bff98'},
       ps:{p:'#6a1b9a',q:'#ba68c8'},
@@ -326,6 +429,24 @@
     };
 
     const vial=(x,y,b=false)=>{const sc=2;const m=b?MAP.bigv:MAP.tearBox;vials.push({x,y:y-2,w:m[0].length*sc,h:m.length*sc,vy:-40,isBig:b,landed:false,baseY:0,phase:Math.random()*6.283,hitPad:0});};
+
+    // ── NEW: spawn an Artificial Tears drop ───────────────────────────────────
+    function spawnArtTearDrop(x,y){
+      const sc=3; // 1.5× the normal vial sc=2
+      const m=MAP.tearBox;
+      artTearDrops.push({
+        x:x-m[0].length*sc*0.5,
+        y:y-4,
+        w:m[0].length*sc,
+        h:m.length*sc,
+        vy:-60,
+        landed:false,
+        baseY:0,
+        phase:Math.random()*6.283,
+        hitPad:0
+      });
+    }
+
     function dropCoin(x,y,kind='gold',vy=-140){coinDrops.push({x,y:y-2,w:14,h:10,vy,kind,val:kind==='silver'?5:1,hitPad:0});}
     function loot(x,y){Math.random()<.15?dropCoin(x-2,y-8,'gold',-140):vial(x-6,y,false);}
     function splitBoss(e){const sc=2,sw=MAP.boss[0].length*sc,sh=(MAP.boss.length-1)*sc;for(let k=0;k<3;k++){en.push({x:e.x+(k*(sw+2)-(sw+2)),y:e.y,vx:0,vy:0,w:sw,h:sh,hitPad:3,type:'miniBoss',hp:4,isMini:true,isBig:false});mini++;}}
@@ -333,24 +454,81 @@
     function onMiniXY(x,y){mini=Math.max(0,mini-1);if(!en.some(z=>z.type==='miniBoss')){mini=0;vial(x,y,true);}}
     function onGreyXY(x,y){greyMini=Math.max(0,greyMini-1);if(greyMini===0&&greyPend){greyPend=false;vial(x-8,y,true);vial(x+8,y,true);}}
 
+    // ── NEW: 20% chance to drop Artificial Tears after purple or grey boss kill
+    function maybeBossArtDrop(x,y){
+      if(Math.random()<0.03) spawnArtTearDrop(x,y);
+    }
+
+    function spawnCoinSparkles(x,y,kind){
+      const isGold=(kind==='gold');
+      const n=7+Math.floor(Math.random()*5);
+      for(let i=0;i<n;i++){
+        const a=(Math.PI*2/n)*i + Math.random()*0.5;
+        const sp=28+Math.random()*55;
+        coinSparkles.push({
+          x:x+(Math.random()*8-4),
+          y:y+(Math.random()*6-3),
+          vx:Math.cos(a)*sp,
+          vy:Math.sin(a)*sp-(30+Math.random()*40),
+          t:0,
+          life:0.38+Math.random()*0.22,
+          col:isGold?'#ffe44a':'#e8f4ff',
+          glow:isGold?'#ffaa00':'#aaddff',
+          size:1+Math.random()*1.5,
+        });
+      }
+    }
+
     function spawnTearSplash(x,y){
       for(let i=0;i<10;i++) tearSplashes.push({x,y,vx:(Math.random()*2-1)*140,vy:(Math.random()*2-1)*140,t:0,life:.35});
     }
 
     const popCol=t=>{
-      if(t==='red') return '#8a0f0f';
-      if(t==='green') return '#1f5a22';
-      if(t==='boss'||t==='miniBoss') return '#4b1a6a';
-      if(t==='greyBoss') return '#3a3a3a';
-      return '#2a2a2a';
+      if(t==='red')   return {body:'#cc1a1a',shine:'#ff6666',dark:'#5a0a0a'};
+      if(t==='green') return {body:'#1a6622',shine:'#55cc55',dark:'#0a3310'};
+      if(t==='boss'||t==='miniBoss') return {body:'#7722bb',shine:'#cc88ff',dark:'#2a0a44'};
+      if(t==='greyBoss') return {body:'#4a4a4a',shine:'#aaaaaa',dark:'#1a1a1a'};
+      return {body:'#333333',shine:'#888888',dark:'#111111'};
     };
     function spawnPop(x,y,type){
-      const col=popCol(type);
-      const n=14;
+      const cols=popCol(type);
+      // Big chunky goo blobs — fewer but meatier
+      const n=10+Math.floor(Math.random()*6);
       for(let i=0;i<n;i++){
+        // Bias angle upward and sideways, less straight down
+        const a=(Math.random()*Math.PI*1.6)-(Math.PI*0.8)+( Math.random()<0.5?0:Math.PI );
+        const sp=60+Math.random()*160;
+        const size=2+Math.random()*5; // blob radius 2–7px
+        pops.push({
+          x, y,
+          vx: Math.cos(a)*sp,
+          vy: Math.sin(a)*sp - (40+Math.random()*100),
+          t: 0,
+          life: 0.55+Math.random()*0.4,
+          size,
+          cols,
+          splat: false,     // true once it hits ground
+          splatT: 0,        // how long it has been splatted
+          splatLife: 0.55+Math.random()*0.3,
+          splatX: 0, splatY: 0,
+          drag: 0.88+Math.random()*0.08, // air resistance per frame
+          stretch: 1,       // vertical stretch while flying
+          wobble: Math.random()*Math.PI*2, // phase offset for jiggle
+        });
+      }
+      // A few extra tiny drips
+      for(let i=0;i<5;i++){
         const a=Math.random()*Math.PI*2;
-        const sp=90+Math.random()*140;
-        pops.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-(60+Math.random()*80),t:0,life:0.28+Math.random()*0.18,s:1,col});
+        const sp=30+Math.random()*80;
+        pops.push({
+          x:x+(Math.random()*10-5), y:y+(Math.random()*6-3),
+          vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-(20+Math.random()*60),
+          t:0, life:0.4+Math.random()*0.3,
+          size:1+Math.random()*2,
+          cols, splat:false, splatT:0, splatLife:0.35,
+          splatX:0, splatY:0, drag:0.82+Math.random()*0.1,
+          stretch:1, wobble:Math.random()*Math.PI*2,
+        });
       }
     }
 
@@ -403,21 +581,29 @@
         en.splice(i,1);
         kills++;spawnBoss();
         onMiniXY(ex,ey);
+        // 20% art tear on miniBoss (purple split) kill
+        maybeBossArtDrop(cx0,ey);
         return;
       }
       if(e.type==='greyBoss'&&e.isMini){
         en.splice(i,1);
         kills++;spawnBoss();
         onGreyXY(ex,ey);
+        // 20% art tear on grey mini kill
+        maybeBossArtDrop(cx0,ey);
         return;
       }
 
       if(e.type==='greyBoss'){
         if(!e.isMini) for(let n=0;n<2;n++) dropCoin(e.x+e.w/2-7+(n?10:-10),e.y-10,'silver',-160);
         splitGrey(e);
+        // art tear on grey boss body (before split; 20% on the full form)
+        maybeBossArtDrop(cx0,ey);
       }else if(e.type==='boss'){
         if(Math.random()<.15) dropCoin(e.x+e.w/2-7,e.y-10,'silver',-160);
         splitBoss(e);
+        // 20% art tear on purple boss kill
+        maybeBossArtDrop(cx0,ey);
       }else{
         loot(e.x+e.w/2,e.y);
       }
@@ -430,7 +616,7 @@
     function touch(){
       const panel=document.getElementById('touch-controls');
       if(!panel) return;
-      const map={left:['ArrowLeft','KeyA'],right:['ArrowRight','KeyD'],jump:['Space','KeyZ'],shoot:['KeyX','KeyJ']};
+      const map={left:['ArrowLeft','KeyA'],right:['ArrowRight','KeyD'],up:['Space','KeyZ'],down:[],jump:['Space','KeyZ'],shoot:['KeyX','KeyJ']};
       const set=(a,d)=>{
         if(a==='pause'&&d){paused=!paused;return;}
         if(a==='shop'&&d&&st==='playing'){shop=!shop;return;}
@@ -485,24 +671,178 @@
     const drawDrop=b=>px(MAP.drop,COL.drop,b.x,b.y,2,b.vx<0);
     const drawS=s=>{const a=Math.max(0,1-(s.t/s.life));if(s.type==='red')return px(MAP.rs,COL.rs,s.x,s.y,s.sc||2.5,false,a);if(s.type==='green')return px(MAP.gs,COL.gs,s.x,s.y,s.sc||2.5,false,a);if(s.type==='greyBoss')return px(MAP.ps,COL.pg,s.x,s.y,s.sc||2.5,false,a);return px(MAP.ps,COL.ps,s.x,s.y,s.sc||2.5,false,a);};
 
+    // ── NEW: draw an Artificial Tears drop with a blue glow ───────────────────
+    function drawArtTearDrop(v){
+      const sc=3;
+      const cx0=v.x+v.w*0.5;
+      const cy0=v.y+v.h*0.5;
+      const pulse=(Math.sin(gt*4)*0.5+0.5); // 0..1 pulsing
+
+      // outer glow (via shadowBlur)
+      ctx.save();
+      ctx.shadowColor='#1a8fff';
+      ctx.shadowBlur=10+pulse*12;
+      // draw a filled rect as the glow base (same size as sprite, transparent fill)
+      ctx.globalAlpha=0.0;
+      ctx.fillRect(v.x,v.y,v.w,v.h);
+      ctx.restore();
+
+      // additional glow ring with composite lighter
+      ctx.save();
+      ctx.globalCompositeOperation='lighter';
+      const gRadius=v.w*0.65;
+      const grad=ctx.createRadialGradient(cx0,cy0,0,cx0,cy0,gRadius);
+      grad.addColorStop(0,`rgba(20,120,255,${0.22+pulse*0.14})`);
+      grad.addColorStop(0.5,`rgba(10,60,180,${0.10+pulse*0.08})`);
+      grad.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=grad;
+      ctx.beginPath();
+      ctx.arc(cx0,cy0,gRadius,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+
+      // the sprite itself — dark blue palette at 6× scale
+      ctx.save();
+      ctx.shadowColor='#4ab8ff';
+      ctx.shadowBlur=6+pulse*8;
+      px(MAP.tearBox,COL.artTear,Math.round(v.x),Math.round(v.y),sc,false);
+      ctx.restore();
+    }
+
     function bg(){
-      ctx.fillStyle='#b2bbc4';ctx.fillRect(0,0,W,H);
-      ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(0,0,W,100);
-      for(let x=10;x<W;x+=52){
-        ctx.fillStyle='#dde3e9';ctx.fillRect(x,14,38,30);
-        ctx.fillStyle='rgba(80,120,155,.16)';ctx.fillRect(x+2,16,16,26);
-        ctx.fillStyle='rgba(80,120,155,.10)';ctx.fillRect(x+20,16,16,26);
-        ctx.fillStyle='#9fa8b2';ctx.fillRect(x,28,38,2);
-        ctx.fillRect(x+18,14,2,30);
+      // ── Dim back-room wall ─────────────────────────────────────────────────
+      ctx.fillStyle='#2a2720';ctx.fillRect(0,0,W,H);
+
+      // Bare concrete/plaster wall — slightly lighter upper half
+      ctx.fillStyle='#32302a';ctx.fillRect(0,0,W,100);
+
+      // Single dim overhead bulb glow (center top)
+      const bulbGrd=ctx.createRadialGradient(W*0.5,0,2,W*0.5,0,W*0.7);
+      bulbGrd.addColorStop(0,'rgba(210,190,140,.13)');
+      bulbGrd.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=bulbGrd;ctx.fillRect(0,0,W,H);
+
+      // Bare bulb fixture
+      ctx.fillStyle='#444038';ctx.fillRect(W/2-1,0,2,5);
+      ctx.fillStyle='#c8b87a';ctx.fillRect(W/2-2,5,4,4);
+
+      // Wall crack / stain marks — sparse
+      ctx.strokeStyle='rgba(20,18,14,.4)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(72,20);ctx.lineTo(78,34);ctx.lineTo(75,42);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(210,15);ctx.lineTo(205,28);ctx.stroke();
+
+      // ── Metal shelving unit ────────────────────────────────────────────────
+      // Upright poles (metal, dark)
+      ctx.fillStyle='#3a3830';
+      ctx.fillRect(8,10,3,90);
+      ctx.fillRect(W-11,10,3,90);
+      ctx.fillStyle='#4a4840';
+      ctx.fillRect(9,10,1,90);ctx.fillRect(W-10,10,1,90);
+
+      // Three shelf boards (fewer than before)
+      const shelfY=[30,55,80];
+      for(const sy of shelfY){
+        ctx.fillStyle='#3e3c35';ctx.fillRect(8,sy,W-16,4);
+        ctx.fillStyle='#4e4c44';ctx.fillRect(8,sy,W-16,1);
+        ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(8,sy+4,W-16,2);
       }
-      const shelf=y=>{ctx.fillStyle='#9fa7b1';ctx.fillRect(8,y,W-16,6);ctx.fillStyle='#8f98a2';ctx.fillRect(8,y,W-16,2);};
-      shelf(54);shelf(70);shelf(86);
-      const box=(x,y)=>{ctx.fillStyle='#9a6f42';ctx.fillRect(x,y,10,8);ctx.fillStyle='#825a2f';ctx.fillRect(x,y,10,2);};
-      for(let x=14;x<W-14;x+=26) if(((x/26)|0)%3===0) box(x,46);
-      for(let x=24;x<W-14;x+=34) if(((x/34)|0)%2===0) box(x,62);
-      for(let x=18;x<W-14;x+=30) if(((x/30)|0)%4===1) box(x,78);
-      ctx.fillStyle='#a6aeb7';ctx.fillRect(0,100,W,12);
-      ctx.fillStyle='#9ca5af';ctx.fillRect(0,112,W,26);
+      // Back wall of shelving — very dark
+      ctx.fillStyle='#252320';ctx.fillRect(11,10,W-22,70);
+
+      // ── Products — sparse, muted, half-empty shelves ──────────────────────
+      // Muted palette helpers
+      const bottle=(x,y,col,cap)=>{
+        ctx.fillStyle=col;ctx.fillRect(x,y,6,9);
+        ctx.fillStyle=cap;ctx.fillRect(x-1,y-2,8,3);
+        ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(x+1,y+1,2,6);
+      };
+      const medbox=(x,y,w,h,col,stripe)=>{
+        ctx.fillStyle=col;ctx.fillRect(x,y,w,h);
+        ctx.fillStyle=stripe;ctx.fillRect(x,y,w,2);
+        ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(x+w-2,y,2,h);
+      };
+      const eyedrop=(x,y,col)=>{
+        ctx.fillStyle=col;ctx.fillRect(x+1,y+3,4,7);
+        ctx.fillStyle=col;ctx.fillRect(x+2,y+1,2,3);
+        ctx.fillStyle='#555';ctx.fillRect(x+2,y,2,2);
+      };
+
+      // Shelf 1 (y ~18) — sparse, half-stocked
+      bottle(16,19,'#3a4a5a','#223344');
+      medbox(26,19,12,10,'#3d3a2e','#5a4a22');
+      eyedrop(42,18,'#2a4a6a');
+      eyedrop(50,18,'#2a3a5a');
+      medbox(62,19,14,10,'#3a2e2e','#5a2222');
+      // gap — empty space
+      bottle(104,19,'#3a3a2a','#4a4a2e');
+      medbox(114,19,12,10,'#2e3a2e','#2a4a2a');
+      // gap
+      eyedrop(152,18,'#2a4a4a');
+      medbox(162,19,16,10,'#3a2a3a','#4a2a4a');
+      bottle(182,19,'#3a3028','#4a3a28');
+      // gap
+      medbox(220,19,14,10,'#2e3040','#22304a');
+      eyedrop(238,18,'#2a4060');
+      bottle(248,19,'#382e2e','#4a2828');
+      // gap — dusty empty end
+      medbox(278,19,12,10,'#303028','#404030');
+
+      // Shelf 2 (y ~43) — more gaps
+      medbox(14,43,16,11,'#2e3a4a','#223040');
+      bottle(34,44,'#3a4030','#2a3020');
+      // gap
+      medbox(72,43,18,11,'#3a2e2a','#4a3020');
+      eyedrop(94,42,'#3a4a3a');
+      // gap
+      medbox(130,43,14,11,'#2e2e3a','#222240');
+      bottle(148,44,'#3a3028','#4a3820');
+      medbox(162,43,16,11,'#382830','#4a2030');
+      // gap
+      bottle(210,44,'#2e3a2e','#223222');
+      medbox(220,43,18,11,'#303028','#404028');
+      // gap
+      eyedrop(268,42,'#2a3848');
+      medbox(278,43,14,11,'#382e28','#4a3820');
+
+      // Shelf 3 (y ~68) — mostly boxes, some gaps
+      medbox(14,68,20,11,'#2e3040','#22283a');
+      // gap
+      medbox(58,68,16,11,'#382e28','#4a3018');
+      bottle(78,69,'#3a3830','#4a4838');
+      // gap
+      medbox(118,68,20,11,'#2e3828','#223020');
+      // large "DRY EYE" stock box — worn label
+      ctx.fillStyle='#1a2a3a';ctx.fillRect(142,66,34,13);
+      ctx.fillStyle='#2a4a6a';ctx.fillRect(142,66,34,3);
+      ctx.fillStyle='rgba(180,200,255,.45)';
+      ctx.font='bold 5px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('DRY EYE',159,73);ctx.textAlign='left';ctx.textBaseline='alphabetic';
+      // gap
+      medbox(182,68,16,11,'#302828','#3a2020');
+      bottle(202,69,'#2e3a30','#223228');
+      // gap
+      medbox(240,68,18,11,'#2a2a38','#1e1e30');
+      medbox(262,68,14,11,'#302e24','#403c28');
+      // gap — bare end
+
+      // ── Dusty floor / ground area ─────────────────────────────────────────
+      // Concrete ledge
+      ctx.fillStyle='#2e2c28';ctx.fillRect(0,122,W,8);
+      ctx.fillStyle='#262420';ctx.fillRect(0,129,W,2);
+
+      // Dark concrete floor
+      ctx.fillStyle='#201e1c';ctx.fillRect(0,131,W,H-131);
+      // Subtle floor seam lines
+      ctx.strokeStyle='rgba(10,9,8,.6)';ctx.lineWidth=1;
+      for(let x=0;x<W;x+=28){ctx.beginPath();ctx.moveTo(x,131);ctx.lineTo(x,H);ctx.stroke();}
+      for(let y=144;y<H;y+=18){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+      ctx.lineWidth=1;
+
+      // ── Final darkness vignette ───────────────────────────────────────────
+      const vig=ctx.createRadialGradient(W/2,H/2,W*0.2,W/2,H/2,W*0.8);
+      vig.addColorStop(0,'rgba(0,0,0,0)');
+      vig.addColorStop(1,'rgba(0,0,0,.45)');
+      ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
     }
 
     // Title-screen critters
@@ -584,7 +924,7 @@
       ctx.fillStyle='rgba(16,32,51,.95)';ctx.fillRect(px0,py0,pw,ph);
       ctx.strokeStyle='#58c4ff';ctx.strokeRect(px0,py0,pw,ph);
       uiTxt('Welcome to Dry Eye Defense!',W/2,py0+18,10,'#8bd9ff','center','alphabetic','900');
-      const lines=['Blast the germs with your tear power, collect coins, and survive!','Blue vials refill TEARS.','Red vials restore HEARTS.','Coins buy upgrades in the shop.',"If you run out of tears, you'll start taking damage.",'Good luck!'];
+      const lines=['Blast the germs with your tear power, collect coins, and survive!','Blue vials refill TEARS.','Red vials restore HEARTS.','Coins buy upgrades in the shop.',"If you run out of tears, you'll start taking damage.",'Rare bosses may drop a glowing ARTIFICIAL TEARS vial — grab it!','Good luck!'];
       const maxW=pw-20;
       let y=py0+40;
       for(const l of lines){const n=uiWrap(l,px0+10,y,maxW,8,'#fff','left','alphabetic','650',12);y+=12*n;}
@@ -644,24 +984,110 @@
       uiTxt('Up/Down: select   J: buy   B: close',W/2,py0+ph-10,7,'#8bd9ff','center','alphabetic','700');
     }
 
-    function drawPlatforms(){
-      for(const p of plats){
-        const isGround=(p.y===140&&p.h===10);
-        if(isGround){
-          ctx.fillStyle='#d2d9df';ctx.fillRect(p.x,p.y,p.w,p.h);
-          ctx.strokeStyle='#b3bcc6';ctx.lineWidth=1;
-          const tile=8;
-          for(let x=p.x-(p.x%tile);x<p.x+p.w;x+=tile){ctx.beginPath();ctx.moveTo(x,p.y);ctx.lineTo(x,p.y+p.h);ctx.stroke();}
-          for(let y=p.y;y<p.y+p.h;y+=tile){ctx.beginPath();ctx.moveTo(p.x,y);ctx.lineTo(p.x+p.w,y);ctx.stroke();}
-          ctx.fillStyle='rgba(110,170,210,0.25)';
-          for(let x=p.x+tile/2;x<p.x+p.w;x+=tile*4) ctx.fillRect(x-1,p.y+2,2,p.h-4);
-        }else{
-          ctx.fillStyle='#7a4a2a';ctx.fillRect(p.x,p.y,p.w,p.h);
-          ctx.fillStyle='#9c6b3f';ctx.fillRect(p.x,p.y,p.w,2);
-          ctx.strokeStyle='#4e2f1a';ctx.strokeRect(p.x,p.y,p.w,p.h);
+    // Seeded pseudo-random for deterministic shelf decoration
+    const seededRand=(seed)=>{let s=seed^0xdeadbeef;s=Math.imul(s^(s>>>16),0x45d9f3b);s=Math.imul(s^(s>>>16),0x45d9f3b);return((s^(s>>>16))>>>0)/0xffffffff;};
+
+    // Muted bottle colors for shelf decoration
+    const BOTTLE_COLS=['#5a3a2a','#2a4a3a','#3a3a5a','#5a4a2a','#4a2a3a','#2a3a4a','#3a4a2a','#4a3a4a','#3a2a4a','#4a4a2a'];
+    const BOTTLE_CAPS=['#7a5a3a','#3a6a4a','#4a4a7a','#7a6a3a','#6a3a4a','#3a4a6a','#4a6a3a','#6a4a6a','#5a3a6a','#6a6a3a'];
+
+    function drawShelfBottles(p){
+      // Draw small decorative bottles sitting on top of this platform
+      // Use platform x as seed so they're always the same
+      const seed=Math.abs(Math.round(p.x*7+p.y*13));
+      const spacing=14;
+      const startX=p.x+4;
+      const endX=p.x+p.w-4;
+      let i=0;
+      for(let bx=startX;bx<endX-4;bx+=spacing,i++){
+        const r0=seededRand(seed+i*17);
+        const r1=seededRand(seed+i*17+1);
+        const r2=seededRand(seed+i*17+2);
+        const r3=seededRand(seed+i*17+3);
+        const r4=seededRand(seed+i*17+4);
+
+        // ~30% chance of a gap (empty space)
+        if(r0<0.28) continue;
+
+        const ci=Math.floor(r1*BOTTLE_COLS.length);
+        const col=BOTTLE_COLS[ci];
+        const cap=BOTTLE_CAPS[ci];
+        const bw=Math.floor(r2*3)+3;   // 3–5px wide
+        const bh=Math.floor(r3*5)+5;   // 5–9px tall
+        const by=p.y-bh;
+        const jitter=Math.floor(r4*3); // slight x jitter
+
+        // bottle body
+        ctx.fillStyle=col;
+        ctx.fillRect(bx+jitter,by,bw,bh);
+        // bottle cap
+        ctx.fillStyle=cap;
+        ctx.fillRect(bx+jitter,by-2,bw,2);
+        // tiny highlight
+        ctx.fillStyle='rgba(255,255,255,.10)';
+        ctx.fillRect(bx+jitter,by,1,bh-1);
+      }
+    }
+
+    function drawShelfSupports(p){
+      // Draw 2–3 wooden bracket supports under the platform
+      const supportW=4;
+      const supportH=10;
+      const bracketCol='#5a3a1e';
+      const bracketHi='#7a5230';
+      const count=Math.max(2,Math.floor(p.w/40));
+      const gap=p.w/(count+1);
+      for(let i=1;i<=count;i++){
+        const sx=Math.round(p.x+gap*i-supportW/2);
+        const sy=p.y+p.h;
+        // vertical bracket leg
+        ctx.fillStyle=bracketCol;
+        ctx.fillRect(sx,sy,supportW,supportH);
+        // angled brace (pixel-art diagonal — staircase)
+        ctx.fillStyle=bracketHi;
+        ctx.fillRect(sx,sy,supportW,1); // top edge highlight
+        // small diagonal brace to the left
+        for(let d=0;d<5;d++){
+          ctx.fillStyle='rgba(90,58,30,.6)';
+          ctx.fillRect(sx-d-1,sy+d+2,2,1);
+        }
+        // small diagonal brace to the right
+        for(let d=0;d<5;d++){
+          ctx.fillStyle='rgba(90,58,30,.6)';
+          ctx.fillRect(sx+supportW+d,sy+d+2,2,1);
         }
       }
-      ctx.lineWidth=1;
+    }
+
+    function drawPlatforms(){
+      for(const p of plats){
+        const isGround=(p.y===162&&p.h===10);
+        if(isGround){
+          // Ground floor — dark concrete shelf look
+          ctx.fillStyle='#3a3830';ctx.fillRect(p.x,p.y,p.w,p.h);
+          ctx.fillStyle='#4a4840';ctx.fillRect(p.x,p.y,p.w,2);
+          ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(p.x,p.y+p.h-2,p.w,2);
+        }else{
+          // Floating shelf — dark wood plank
+          ctx.fillStyle='#5a3a1e';ctx.fillRect(p.x,p.y,p.w,p.h);
+          // top surface grain highlight
+          ctx.fillStyle='#7a5230';ctx.fillRect(p.x,p.y,p.w,2);
+          // underside shadow
+          ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(p.x,p.y+p.h-2,p.w,2);
+          // wood grain lines
+          ctx.strokeStyle='rgba(0,0,0,.18)';ctx.lineWidth=1;
+          const seed=Math.abs(Math.round(p.x*3+p.y));
+          for(let g=0;g<3;g++){
+            const gx=p.x+seededRand(seed+g)*p.w;
+            ctx.beginPath();ctx.moveTo(gx,p.y+2);ctx.lineTo(gx+seededRand(seed+g+10)*8-4,p.y+p.h-2);ctx.stroke();
+          }
+          ctx.lineWidth=1;
+          // wall bracket supports underneath
+          drawShelfSupports(p);
+          // decorative bottles on top
+          drawShelfBottles(p);
+        }
+      }
     }
 
     function render(){
@@ -679,6 +1105,9 @@
       drawPlatforms();
 
       for(const v of vials) v.isBig?px(MAP.bigv,COL.bigv,v.x,v.y,2):px(MAP.tearBox,COL.tearBox,v.x,v.y,2);
+
+      // ── NEW: draw Artificial Tears drops ─────────────────────────────────
+      for(const v of artTearDrops) drawArtTearDrop(v);
 
       for(const c of coinDrops){
         const bob=Math.sin(gt*6+c.x*.12)*2;
@@ -701,15 +1130,59 @@
 
       for(const s of splats) drawS(s);
 
+      // Draw goo blobs
       for(const p of pops){
-        const a=Math.max(0,1-p.t/p.life);
-        ctx.globalAlpha=Math.min(1,a*0.9);
-        ctx.fillStyle=p.col;
-        ctx.fillRect(p.x,p.y,p.s,p.s);
-        ctx.globalAlpha=Math.min(1,a*0.7);
-        ctx.strokeStyle='rgba(0,0,0,0.85)';
-        ctx.lineWidth=1;
-        ctx.strokeRect(p.x-0.5,p.y-0.5,p.s+1,p.s+1);
+        if(p.splat){
+          // Splatted on ground — spread into a flat wobbly puddle
+          const age=p.splatT/p.splatLife;
+          const alpha=Math.max(0,1-age*age);
+          const spread=p.size*(2.5+age*3.5); // grows outward
+          const thick=Math.max(0.5,p.size*(0.5-age*0.35)); // squashes flat
+          ctx.save();
+          ctx.globalAlpha=alpha*0.85;
+          ctx.translate(Math.round(p.splatX), Math.round(p.splatY));
+          ctx.scale(1,thick/spread);
+          ctx.beginPath();
+          ctx.arc(0,0,spread,0,Math.PI*2);
+          ctx.fillStyle=p.cols.dark;
+          ctx.fill();
+          // inner goo highlight
+          ctx.beginPath();
+          ctx.arc(-spread*0.15,-spread*0.1,spread*0.45,0,Math.PI*2);
+          ctx.fillStyle=p.cols.body;
+          ctx.fill();
+          ctx.restore();
+        } else {
+          // Flying goo blob — stretches in direction of travel
+          const speed=Math.hypot(p.vx,p.vy);
+          const angle=Math.atan2(p.vy,p.vx);
+          const alpha=Math.max(0,1-(p.t/p.life)*0.6);
+          const jiggle=1+Math.sin(p.wobble+p.t*18)*0.12;
+          const stretchX=p.size*(1+Math.min(speed/120,1.4));
+          const stretchY=p.size*(0.55+Math.max(0,1-speed/120)*0.45)*jiggle;
+
+          ctx.save();
+          ctx.globalAlpha=alpha;
+          ctx.translate(Math.round(p.x), Math.round(p.y));
+          ctx.rotate(angle);
+          // outer dark blob
+          ctx.beginPath();
+          ctx.ellipse(0,0,stretchX,stretchY,0,0,Math.PI*2);
+          ctx.fillStyle=p.cols.dark;
+          ctx.fill();
+          // main goo color
+          ctx.beginPath();
+          ctx.ellipse(0,0,stretchX*0.8,stretchY*0.8,0,0,Math.PI*2);
+          ctx.fillStyle=p.cols.body;
+          ctx.fill();
+          // shiny highlight
+          ctx.beginPath();
+          ctx.ellipse(-stretchX*0.2,-stretchY*0.25,stretchX*0.3,stretchY*0.28,0,0,Math.PI*2);
+          ctx.fillStyle=p.cols.shine;
+          ctx.globalAlpha=alpha*0.55;
+          ctx.fill();
+          ctx.restore();
+        }
       }
       ctx.globalAlpha=1;ctx.lineWidth=1;
 
@@ -729,6 +1202,40 @@
       }
       ctx.globalAlpha=1;
 
+      // Coin sparkles
+      for(const s of coinSparkles){
+        const a=Math.max(0,1-(s.t/s.life));
+        const sz=s.size*(1+a*0.5);
+        // glow
+        ctx.save();
+        ctx.globalCompositeOperation='lighter';
+        ctx.globalAlpha=a*0.5;
+        ctx.fillStyle=s.glow;
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,sz*2.2,0,Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+        // star cross — 4 lines
+        ctx.save();
+        ctx.globalAlpha=a*0.9;
+        ctx.strokeStyle=s.col;
+        ctx.lineWidth=1;
+        const arm=sz*2.5*(0.5+a*0.5);
+        ctx.beginPath();
+        ctx.moveTo(s.x-arm,s.y);ctx.lineTo(s.x+arm,s.y);
+        ctx.moveTo(s.x,s.y-arm);ctx.lineTo(s.x,s.y+arm);
+        ctx.stroke();
+        // diagonal arms (smaller)
+        const darm=arm*0.55;
+        ctx.globalAlpha=a*0.6;
+        ctx.beginPath();
+        ctx.moveTo(s.x-darm,s.y-darm);ctx.lineTo(s.x+darm,s.y+darm);
+        ctx.moveTo(s.x+darm,s.y-darm);ctx.lineTo(s.x-darm,s.y+darm);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.globalAlpha=1;ctx.lineWidth=1;
+
       const flip=pl.facing<0;
       const bobY=pl._bobY||0;
       if(st==='dead'&&deadT>0) px(MAP.death,COL.death,pl.x,pl.y+bobY,2,flip);
@@ -746,7 +1253,36 @@
           ctx.fillStyle='rgba(255,80,80,.75)';
           ctx.fillRect(pl.x-2,pl.y+bobY-2,pl.w+4,pl.h+4);
           ctx.restore();
-        }else drawEye(pl.x,pl.y+bobY,flip,eyeCols);
+        }else{
+          drawEye(pl.x,pl.y+bobY,flip,eyeCols);
+        }
+        // Artificial Tears: pulsing shield glow around the player
+        if(pl.artT>0){
+          const sp=Math.sin(gt*7);
+          const shieldPul=(sp+1)*0.5;
+          const shieldCol=shieldPul>0.5?'rgba(88,196,255,':'rgba(255,228,74,';
+          const cx0=pl.x+pl.w*0.5, cy0=pl.y+bobY+pl.h*0.5;
+          const r=pl.w*0.85+shieldPul*4;
+          // outer glow ring
+          ctx.save();
+          ctx.globalCompositeOperation='lighter';
+          const grad=ctx.createRadialGradient(cx0,cy0,r*0.55,cx0,cy0,r*1.35);
+          grad.addColorStop(0,shieldCol+(0.28+shieldPul*0.14)+')');
+          grad.addColorStop(0.55,shieldCol+(0.10+shieldPul*0.06)+')');
+          grad.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.fillStyle=grad;
+          ctx.beginPath();ctx.arc(cx0,cy0,r*1.35,0,Math.PI*2);ctx.fill();
+          ctx.restore();
+          // sharp shield ring
+          ctx.save();
+          ctx.globalAlpha=0.55+shieldPul*0.3;
+          ctx.strokeStyle=shieldPul>0.5?'#58c4ff':'#ffe44a';
+          ctx.lineWidth=1.5;
+          ctx.shadowColor=shieldPul>0.5?'#58c4ff':'#ffe44a';
+          ctx.shadowBlur=6+shieldPul*6;
+          ctx.beginPath();ctx.arc(cx0,cy0,r,0,Math.PI*2);ctx.stroke();
+          ctx.restore();
+        }
       }
       ctx.restore();
 
@@ -817,9 +1353,10 @@
       if(st!=='playing'||paused||shop) return;
 
       // timers
-      pl.inv=Math.max(0,pl.inv-dt);
       pl.stompT=Math.max(0,pl.stompT-dt);
       pl.artT=Math.max(0,pl.artT-dt);
+      // While Artificial Tears active: full invisibility (inv keeps refreshing)
+      if(pl.artT>0){ pl.inv=0.5; } else { pl.inv=Math.max(0,pl.inv-dt); }
       pl.artCd=Math.max(0,pl.artCd-dt);
       pl.flash=Math.max(0,pl.flash-dt);
 
@@ -876,25 +1413,22 @@
       spT-=dt;
       if(spT<=0){
         spT=.8+Math.random()*.4;
-        en.push({x:cx+W+30,y:120,vx:0,vy:0,w:18,h:18,hitPad:1,type:(Math.random()<.3?'red':'green'),hp:2,isBig:false,isMini:false});
+        en.push({x:cx+W+30,y:142,vx:0,vy:0,w:18,h:18,hitPad:1,type:(Math.random()<.3?'red':'green'),hp:2,isBig:false,isMini:false});
       }
 
       // enemies
       for(let i=en.length-1;i>=0;i--){
         const e=en[i];
 
-        // init missing fields
         if(e.slow==null) e.slow=0;
         if(e.slowTimer==null) e.slowTimer=0;
         if(e.gait==null) e.gait=Math.random()*10;
         if(e.seed==null) e.seed=Math.random()*1000;
         if(e.hopCd==null) e.hopCd=0.6+Math.random()*1.0;
 
-        // decay slow
         if(e.slowTimer>0){ e.slowTimer=Math.max(0,e.slowTimer-dt); }
         else{ e.slow=Math.max(0,e.slow-dt*1.6); }
 
-        // horizontal movement
         const tx=pl.x+pl.w/2, ex=e.x+e.w/2;
         const base=e.isBig?40:30;
         const sp=base*(1-.45*(e.slow||0));
@@ -909,7 +1443,6 @@
         e.y+=e.vy*dt;
         e.grounded=land(e);
 
-        // hopping (disabled for main grey boss)
         const hopFactor=(e.type==='greyBoss'&&!e.isMini)?0:(e.type==='boss'?0.35:(e.type==='miniBoss'?0.6:1));
         if(hopFactor>0){
           e.hopCd-=dt;
@@ -920,11 +1453,9 @@
           }
         }
 
-        // bullet hits
         for(let j=bullets.length-1;j>=0;j--){
           const b=bullets[j];
           if(ovHB(b,e)){
-            // splash at impact
             spawnTearSplash(b.x+b.w*0.5,b.y+b.h*0.5);
             bullets.splice(j,1);
             e.hp=(e.hp|0)-1;
@@ -935,12 +1466,11 @@
           }
         }
 
-        if(!en[i]) continue; // enemy may have been removed by kill()
+        if(!en[i]) continue;
 
-        // stomp (restore bounce/jump feel)
         const stomping=(pl.vy>0&&pl.stompT<=0&&ovHB(pl,e)&&(pl.y+pl.h-e.y)<14);
         if(stomping){
-          pl.vy=JS*0.72; // bounce
+          pl.vy=JS*0.72;
           pl.onGround=false;
           pl.stompT=0.12;
           spawnTearSplash(e.x+e.w*0.5,e.y+2);
@@ -948,7 +1478,6 @@
           continue;
         }
 
-        // player contact damage
         if(ovHB(pl,e)&&pl.inv<=0){
           pl.hp=Math.max(0,pl.hp-1);
           pl.flash=0.35;
@@ -958,45 +1487,26 @@
           pl.vy=Math.min(pl.vy,120);
         }
 
-        // keep boss-family enemies from despawning behind the camera (tether them just off the left edge)
         const isBossFamily=
-          e.isBig ||
-          e.isMini ||
-          e.type==='boss' ||
-          e.type==='miniBoss' ||
-          e.type==='greyBoss' ||
-          (typeof e.type==='string' && e.type.toLowerCase().includes('boss'));
+          e.isBig||e.isMini||e.type==='boss'||e.type==='miniBoss'||e.type==='greyBoss'||
+          (typeof e.type==='string'&&e.type.toLowerCase().includes('boss'));
 
         if(isBossFamily){
           const tetherX=cx-18;
-          if(e.x+e.w<tetherX){
-            e.x=tetherX-e.w;
-            if(e.vx<0) e.vx=0;
-          }
+          if(e.x+e.w<tetherX){e.x=tetherX-e.w;if(e.vx<0) e.vx=0;}
         }else{
-          if(e.x+e.w<cx-140){
-            en.splice(i,1);
-            continue;
-          }
+          if(e.x+e.w<cx-140){en.splice(i,1);continue;}
         }
       }
 
-      // --- water trail behind eyeball while rolling ---
-      if(pl.onGround && Math.abs(pl.vx)>20){
+      // water trail
+      if(pl.onGround&&Math.abs(pl.vx)>20){
         const rate=clamp(Math.abs(pl.vx)/MS,0.35,1.0);
         const n=(Math.random()<0.60*rate)?1:0;
         for(let k=0;k<n;k++){
-          const backX=pl.x+pl.w*0.5 - pl.facing*(10+Math.random()*6);
+          const backX=pl.x+pl.w*0.5-pl.facing*(10+Math.random()*6);
           const footY=pl.y+pl.h-2;
-          droplets.push({
-            x:backX+(Math.random()*4-2),
-            y:footY+(Math.random()*2-1),
-            vx:(-pl.facing)*(40+Math.random()*70) + (Math.random()*20-10),
-            vy:-(25+Math.random()*55),
-            age:0,
-            life:0.16+Math.random()*0.12,
-            s:(Math.random()<0.75?1:2)
-          });
+          droplets.push({x:backX+(Math.random()*4-2),y:footY+(Math.random()*2-1),vx:(-pl.facing)*(40+Math.random()*70)+(Math.random()*20-10),vy:-(25+Math.random()*55),age:0,life:0.16+Math.random()*0.12,s:(Math.random()<0.75?1:2)});
         }
       }
 
@@ -1004,156 +1514,116 @@
       for(let i=vials.length-1;i>=0;i--){
         const v=vials[i];
         if(!v.landed){
-          v.vy+=G*dt;
-          v.y+=v.vy*dt;
-          if(land(v,18)){
-            v.landed=true;
-            v.vy=0;
-            v.baseY=v.y;
-          }
-        }else{
-          v.phase+=dt*2.2;
-          v.y=v.baseY+Math.sin(v.phase)*1.5;
-        }
-
+          v.vy+=G*dt;v.y+=v.vy*dt;
+          if(land(v,18)){v.landed=true;v.vy=0;v.baseY=v.y;}
+        }else{v.phase+=dt*2.2;v.y=v.baseY+Math.sin(v.phase)*1.5;}
         if(ovHB(pl,v)){
-          if(v.isBig){
-            const before=pl.hp;
-            pl.hp=clamp(pl.hp+1,0,pl.maxH);
-            toast(pl.hp>before?'Heart +1':'Hearts full',0.8);
-          }else{
-            const before=pl.tear;
-            pl.tear=clamp(pl.tear+TPV,0,MAXT);
-            toast(pl.tear>before?('Tears +'+TPV):'Tears full',0.7);
-          }
+          if(v.isBig){const before=pl.hp;pl.hp=clamp(pl.hp+1,0,pl.maxH);toast(pl.hp>before?'Heart +1':'Hearts full',0.8);}
+          else{const before=pl.tear;pl.tear=clamp(pl.tear+TPV,0,MAXT);toast(pl.tear>before?('Tears +'+TPV):'Tears full',0.7);}
           vials.splice(i,1);
+        }
+      }
+
+      // ── NEW: Artificial Tears drop update & pickup ────────────────────────
+      for(let i=artTearDrops.length-1;i>=0;i--){
+        const v=artTearDrops[i];
+        if(!v.landed){
+          v.vy+=G*dt;v.y+=v.vy*dt;
+          if(land(v,24)){v.landed=true;v.vy=0;v.baseY=v.y;}
+        }else{v.phase+=dt*1.8;v.y=v.baseY+Math.sin(v.phase)*2.5;}
+        if(ovHB(pl,v)){
+          // activates Artificial Tears (same as shop purchase) even if on cooldown
+          pl.artT=15;
+          pl.artCd=Math.max(pl.artCd,15); // at minimum reset active window
+          toast('ARTIFICIAL TEARS!',1.5);
+          artTearDrops.splice(i,1);
         }
       }
 
       // coins
       for(let i=coinDrops.length-1;i>=0;i--){
         const c=coinDrops[i];
-        c.vy+=G*dt;
-        c.y+=c.vy*dt;
+        c.vy+=G*dt;c.y+=c.vy*dt;
         if(land(c,18)) c.vy=0;
-        if(ovHB(pl,c)){
-          coinsN+=(c.val|0)||1;
-          coinDrops.splice(i,1);
-        }
+        if(ovHB(pl,c)){coinsN+=(c.val|0)||1;spawnCoinSparkles(c.x+c.w*0.5,c.y+c.h*0.5,c.kind);coinDrops.splice(i,1);}
       }
 
       // particles
-      for(let i=splats.length-1;i>=0;i--){
-        const s=splats[i];
-        s.t+=dt;
-        if(s.t>=s.life) splats.splice(i,1);
-      }
+      for(let i=splats.length-1;i>=0;i--){const s=splats[i];s.t+=dt;if(s.t>=s.life) splats.splice(i,1);}
       for(let i=pops.length-1;i>=0;i--){
         const p=pops[i];
-        p.t+=dt;
-        p.vy+=520*dt;
-        p.x+=p.vx*dt;
-        p.y+=p.vy*dt;
-        if(p.t>=p.life) pops.splice(i,1);
+        if(p.splat){
+          p.splatT+=dt;
+          if(p.splatT>=p.splatLife) pops.splice(i,1);
+        } else {
+          p.t+=dt;
+          // Gravity — heavier than tears so it flops down fast
+          p.vy+=680*dt;
+          // Air drag — slows horizontal, gives that floppy goo feel
+          p.vx*=Math.pow(p.drag,dt*60);
+          p.vy*=Math.pow(p.drag+0.04,dt*60);
+          p.x+=p.vx*dt;
+          p.y+=p.vy*dt;
+          // Check if it hit a platform (ground check)
+          let landed=false;
+          for(const pl2 of plats){
+            if(p.x>=pl2.x&&p.x<=pl2.x+pl2.w&&p.y>=pl2.y&&p.y<=pl2.y+pl2.h&&p.vy>0){
+              p.splat=true; p.splatT=0;
+              p.splatX=p.x; p.splatY=pl2.y;
+              landed=true; break;
+            }
+          }
+          if(!landed && p.t>=p.life) pops.splice(i,1);
+        }
       }
-      for(let i=tearSplashes.length-1;i>=0;i--){
-        const t=tearSplashes[i];
-        t.t+=dt;
-        t.x+=t.vx*dt;
-        t.y+=t.vy*dt;
-        if(t.t>=t.life) tearSplashes.splice(i,1);
-      }
+      for(let i=tearSplashes.length-1;i>=0;i--){const t=tearSplashes[i];t.t+=dt;t.x+=t.vx*dt;t.y+=t.vy*dt;if(t.t>=t.life) tearSplashes.splice(i,1);}
+      for(let i=coinSparkles.length-1;i>=0;i--){const s=coinSparkles[i];s.t+=dt;s.vy+=320*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.t>=s.life) coinSparkles.splice(i,1);}
       updateDroplets(dt);
 
       // bob
-      if(pl.onGround){
-        pl._bobT+=dt*8;
-        pl._bobY=Math.sin(pl._bobT)*0.7;
-      }else{
-        pl._bobT=0;
-        pl._bobY=0;
-      }
+      if(pl.onGround){pl._bobT+=dt*8;pl._bobY=Math.sin(pl._bobT)*0.7;}
+      else{pl._bobT=0;pl._bobY=0;}
 
       // camera + world
       cx=Math.max(0,Math.floor(pl.x-W*0.35));
       ensure();
       spawnBoss();
 
-      // toast timer
       toastT=Math.max(0,toastT-dt);
 
-      // death
-      if(pl.hp<=0){
-        st='dead';
-        deadT=0;
-        paused=false;
-        shop=false;
-      }
+      if(pl.hp<=0){st='dead';deadT=0;paused=false;shop=false;}
     }
 
     function reset(){
       st='playing';
-      paused=false;
-      shop=false;
-      toastT=0;
-      toastS='';
+      paused=false;shop=false;toastT=0;toastS='';
 
       pl.x=40;pl.y=40;pl.vx=0;pl.vy=0;pl.facing=1;
       pl.maxH=HB;pl.hp=HB;
       pl.tear=MAXT;pl.dry=0;pl.scd=0;pl.flash=0;pl.inv=0;pl.stompT=0;
       pl.artT=0;pl.artCd=0;
-      pl.onGround=false;
-      pl._bobT=0;pl._bobY=0;
+      pl.onGround=false;pl._bobT=0;pl._bobY=0;
 
-      coinsN=0;
-      tearC=TC;
-      cd=0.18;
-      lvls.tearDiscount=0;
-      lvls.fasterFire=0;
-      lvls.healHeart=0;
+      coinsN=0;tearC=TC;cd=0.18;
+      lvls.tearDiscount=0;lvls.fasterFire=0;lvls.healHeart=0;
 
-      bullets.length=0;
-      en.length=0;
-      vials.length=0;
-      splats.length=0;
-      pops.length=0;
-      coinDrops.length=0;
-      tearSplashes.length=0;
-      droplets.length=0;
-      deadGerms.length=0;
+      bullets.length=0;en.length=0;vials.length=0;splats.length=0;pops.length=0;
+      coinDrops.length=0;tearSplashes.length=0;droplets.length=0;deadGerms.length=0;coinSparkles.length=0;
+      artTearDrops.length=0; // ── NEW: clear art tear drops on reset
 
-      cx=0;
-      plats.length=0;
-      plats.push({x:0,y:140,w:260,h:10,vy:0});
+      cx=0;plats.length=0;plats.push({x:0,y:162,w:260,h:10,vy:0});
 
-      kills=0;
-      nextBoss=20;
-      nextGrey=100;
-      spT=0;
-      deadT=0;
-      mini=0;
-      greyMini=0;
-      greyPend=false;
+      kills=0;nextBoss=20;nextGrey=100;spT=0;deadT=0;mini=0;greyMini=0;greyPend=false;
 
       ensure();
     }
 
     function start(){
-      if(!tutorial){
-        tutorial=true;
-        st='tutorial';
-        paused=false;
-        shop=false;
-      }else{
-        reset();
-      }
+      if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;}
+      else{reset();}
     }
 
-    // click/tap helper
-    const toGamePt=e=>{
-      const r=cv.getBoundingClientRect();
-      return {x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};
-    };
+    const toGamePt=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};};
     const inBtn=(p,b)=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h;
 
     cv.addEventListener('pointerdown',e=>{
@@ -1161,28 +1631,19 @@
       if(st==='title'){start();return;}
       if(st==='tutorial'){st='controls';paused=false;shop=false;return;}
       if(st==='controls'){reset();return;}
-      if(st==='dead'){
-        if(inBtn(p,btnRe)) reset();
-        return;
-      }
+      if(st==='dead'){if(inBtn(p,btnRe)) reset();return;}
     },{passive:true});
 
     function loop(ts){
       if(!last) last=ts;
       const dt=Math.min(0.033,(ts-last)/1000);
-      last=ts;
-      gt+=dt;
+      last=ts;gt+=dt;
       if(st==='dead') deadT+=dt;
-      update(dt);
-      render();
+      update(dt);render();
       requestAnimationFrame(loop);
     }
 
-    // init
-    resize();
-    touch();
-    ensure();
-    // tiny sanity-checks (safe in production; no-op unless something is broken)
+    resize();touch();ensure();
     if(typeof spawnTearSplash!=='function') throw new Error('spawnTearSplash missing');
     requestAnimationFrame(loop);
 
