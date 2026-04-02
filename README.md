@@ -24,4 +24,5 @@ I am currently designing all the audio, which will be patched into the game soon
 v0.2 Fixed minor bug and syntax errors, added new splash and water physics plus additional jump mechanic. -12/27/2025
 
 v0.3 Major update to mobile UI and gameplay. Changed graphics, enemy AI actions and added new special item drop. Player now has the ability to gain invincibility when using artificial tears power-up. 
+
 v0.4 HUGE UPDATE added new enemy, new weapon, new layouts and changed game layout and playability
