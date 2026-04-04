@@ -222,8 +222,8 @@
     }
     const buyByKey=code=>buy(ups.find(u=>u.key===code));
     let last=0,cx=0;
-    const bullets=[],en=[],vials=[],splats=[],pops=[],coinDrops=[],tearSplashes=[],droplets=[],deadGerms=[],coinSparkles=[],artTearDrops=[],tearBombs=[];
-    let kills=0,nextBoss=40,nextGrey=100,spT=0,deadT=0,mini=0,greyMini=0,greyPend=false;
+    const bullets=[],en=[],vials=[],splats=[],pops=[],coinDrops=[],tearSplashes=[],droplets=[],deadGerms=[],coinSparkles=[],artTearDrops=[],tearBombs=[],enemyBullets=[];
+    let kills=0,nextBoss=40,nextGrey=100,nextSpitter=20,spT=0,deadT=0,mini=0,greyMini=0,greyPend=false;
     let shakeT=0,shakeMag=0;
     const shake=(mag,dur)=>{shakeMag=Math.max(shakeMag,mag);shakeT=Math.max(shakeT,dur);};
     // Wave system
@@ -268,7 +268,13 @@
       waveBossSpawned=true;waveBossKilled=false;
     }
     function spawnBoss(){
-      if(waveN<=10) return; // waves 1-10 use spawnWaveBoss instead
+      if(waveN>=4&&kills>=nextSpitter){
+        nextSpitter+=20;
+        const sc=3,bw=MAP.boss[0].length*sc,bh=(MAP.boss.length-1)*sc;
+        en.push({x:cx+W+40,y:162-bh,vx:0,vy:0,w:bw,h:bh,hitPad:3,type:'spitter',hp:8,isBig:false,isMini:false,shootCd:1.5+Math.random()*1.5});
+        shake(2,0.2);
+      }
+      if(waveN<=10) return;
       if(kills>=nextBoss){
         nextBoss+=40;
         en.push({x:cx+W+40,y:132,vx:0,vy:0,w:27,h:24,hitPad:3,type:'boss',hp:20,isBig:true});
@@ -309,6 +315,7 @@
       boss:{p:'#b45bff',q:'#f4b3ff'},grey:{p:'#4a4a4a',q:'#7a7a7a'},drop:{b:'#6fd5ff'},coin:{y:'#ffd94a'},
       scoin:{s:'#cfd8e6',w:'#ffffff'},bigv:{w:'#fff',r:'#ff3030','+':'#58ff9a'},tearBox:{k:'#000000',b:'#58c4ff',w:'#ffffff'},
       yellow:{g:'#ffe84a',h:'#b8a000',e:'#ffffff',k:'#fff176'},
+      spitter:{p:'#ff3030',q:'#5ed36b',r:'#ffaa00',s:'#ff8080',t:'#2f6f33'},
       artTear:{k:'#001433',b:'#1a6fff',w:'#ffe44a'},rs:{r:'#7b0000',h:'#ff5a5a'},gs:{g:'#1f5a22',k:'#6bff98'},
       ps:{p:'#6a1b9a',q:'#ba68c8'},pg:{p:'#2f2f2f',q:'#7a7a7a'}
     };
@@ -346,6 +353,7 @@
       if(t==='red') return {body:'#cc1a1a',shine:'#ff6666',dark:'#5a0a0a'};
       if(t==='green') return {body:'#1a6622',shine:'#55cc55',dark:'#0a3310'};
       if(t==='yellow') return {body:'#ccaa00',shine:'#ffee44',dark:'#665500'};
+      if(t==='spitter') return {body:'#aa2211',shine:'#55cc44',dark:'#221100'};
       if(t==='boss'||t==='miniBoss') return {body:'#7722bb',shine:'#cc88ff',dark:'#2a0a44'};
       if(t==='greyBoss') return {body:'#4a4a4a',shine:'#aaaaaa',dark:'#1a1a1a'};
       return {body:'#333333',shine:'#888888',dark:'#111111'};
@@ -378,7 +386,7 @@
       if(e.type==='greyBoss'){if(!e.isMini) for(let n=0;n<2;n++) dropCoin(e.x+e.w/2-7+(n?10:-10),e.y-10,'silver',-160);splitGrey(e);}
       else if(e.type==='boss'){if(Math.random()<.15) dropCoin(e.x+e.w/2-7,e.y-10,'silver',-160);splitBoss(e);}
       else{loot(e.x+e.w/2,e.y);}
-      en.splice(i,1);kills++;if(e.type==='red'||e.type==='green'||e.type==='yellow') waveKills++;spawnBoss();
+      en.splice(i,1);kills++;if(e.type==='red'||e.type==='green'||e.type==='yellow'||e.type==='spitter') waveKills++;spawnBoss();
       // After splice+split, check if all boss-family enemies are gone
       if(waveBossSpawned&&!en.some(z=>z.type==='boss'||z.type==='miniBoss'||z.type==='greyBoss')) waveBossKilled=true;
     }
@@ -409,6 +417,15 @@
       if(e.type==='greyBoss'){const sc=Math.max(2,Math.round(e.w/MAP.boss[0].length));px(MAP.boss,COL.grey,e.x,e.y,sc,false);return;}
       if(e.type==='boss'){px(MAP.boss,COL.boss,e.x,e.y,3,false);return;}
       if(e.type==='miniBoss'){px(MAP.boss,COL.boss,e.x,e.y,2,false);return;}
+      if(e.type==='spitter'){
+        // Left half red, right half green — clip each side
+        const sc=3,hw=Math.floor(MAP.boss[0].length/2);
+        ctx.save();ctx.beginPath();ctx.rect(e.x,e.y,hw*sc,MAP.boss.length*sc);ctx.clip();
+        px(MAP.boss,{p:COL.spitter.p,q:COL.spitter.s},e.x,e.y,sc,false);ctx.restore();
+        ctx.save();ctx.beginPath();ctx.rect(e.x+hw*sc,e.y,(MAP.boss[0].length-hw)*sc,MAP.boss.length*sc);ctx.clip();
+        px(MAP.boss,{p:COL.spitter.q,q:COL.spitter.t},e.x,e.y,sc,false);ctx.restore();
+        return;
+      }
       px(e.type==='red'?MAP.red:MAP.green,e.type==='red'?COL.red:e.type==='yellow'?COL.yellow:COL.green,e.x,e.y,2,false);
     };
     const drawDrop=b=>px(MAP.drop,COL.drop,b.x,b.y,2,b.vx<0);
@@ -800,6 +817,14 @@
       }
       ctx.globalAlpha=1;ctx.lineWidth=1;
       for(const e of en) drawG(e);for(const b of bullets) drawDrop(b);
+      // Enemy projectiles — gross yellow globs
+      for(const b of enemyBullets){
+        const pulse=Math.sin(gt*20+b.x)*0.2+1;
+        ctx.save();ctx.shadowColor='#aacc00';ctx.shadowBlur=6;
+        ctx.fillStyle='#ccee00';ctx.beginPath();ctx.arc(b.x,b.y,4*pulse,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#ffff44';ctx.beginPath();ctx.arc(b.x-1,b.y-1,2,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+      }
       // Draw tear bombs
       for(const b of tearBombs){
         if(b.exploded){
@@ -1022,23 +1047,28 @@
         if(spT<=0){
           const spawnInterval=waveN<=2?(.9+Math.random()*.4):waveN<=5?(.45+Math.random()*.2):(.22+Math.random()*.1);
           spT=spawnInterval;
-          const onScreen=en.filter(e=>e.type==='red'||e.type==='green'||e.type==='yellow').length;
+          const onScreen=en.filter(e=>e.type==='red'||e.type==='green'||e.type==='yellow'||e.type==='spitter').length;
           const maxOnScreen=waveN<=2?8:waveN<=5?12:16;
           const remaining=waveGoal-waveKills-onScreen;
           if(remaining>0&&onScreen<maxOnScreen){
             const pickType=()=>{
-              if(waveN>=4){const r=Math.random();return r<0.25?'red':r<0.5?'yellow':'green';}
-              return Math.random()<0.3?'red':'green';
+              const r=Math.random();
+              if(waveN>=4) return r<0.25?'red':r<0.45?'yellow':'green';
+              return r<0.3?'red':'green';
             };
-            const t1=pickType();
-            en.push({x:cx+W+30,y:142,vx:0,vy:0,w:18,h:18,hitPad:1,type:t1,hp:t1==='yellow'?3:2,isBig:false,isMini:false,fast:t1==='yellow'});
-            if(remaining>1){const t2=pickType();en.push({x:cx+W+50,y:142,vx:0,vy:0,w:18,h:18,hitPad:1,type:t2,hp:t2==='yellow'?3:2,isBig:false,isMini:false,fast:t2==='yellow'});}
+            const makeEnemy=(x,t)=>{
+              const isSpitter=t==='spitter';
+              const sc=isSpitter?3:2;const bw=MAP.boss[0].length*sc;const bh=(MAP.boss.length-1)*sc;
+              return {x,y:142-(isSpitter?bh-18:0),vx:0,vy:0,w:isSpitter?bw:18,h:isSpitter?bh:18,hitPad:isSpitter?3:1,type:t,hp:isSpitter?8:t==='yellow'?3:2,isBig:false,isMini:false,fast:t==='yellow',shootCd:isSpitter?(1.5+Math.random()*1.5):0};
+            };
+            const t1=pickType();en.push(makeEnemy(cx+W+30,t1));
+            if(remaining>1){const t2=pickType();en.push(makeEnemy(cx+W+55,t2));}
           }
         }
       }
       // All germs killed — spawn wave boss (waves 1-10) or auto-advance (wave 11+)
       if(waveSpawning&&waveKills>=waveGoal&&!waveBossSpawned){
-        const normalLeft=en.some(e=>e.type==='red'||e.type==='green'||e.type==='yellow');
+        const normalLeft=en.some(e=>e.type==='red'||e.type==='green'||e.type==='yellow'||e.type==='spitter');
         if(!normalLeft){
           if(waveN<=10){
             spawnWaveBoss();
@@ -1075,7 +1105,7 @@
         const approachingFromTop=pl.vy>0&&(plFoot-e.y)<28&&(plFoot>e.y);
         const stomping=(approachingFromTop&&pl.stompT<=0&&ovHB(pl,e));
         if(stomping&&!pl.slamming){
-          const stompable=e.type==='red'||e.type==='green'||e.type==='yellow'||e.type==='miniBoss';
+          const stompable=e.type==='red'||e.type==='green'||e.type==='yellow'||e.type==='spitter'||e.type==='miniBoss';
           pl.vy=JS*1.4;pl.onGround=false;pl.stompT=0.12;pl.bounceW=0;
           spawnTearSplash(e.x+e.w*0.5,e.y+2);
           if(stompable){kill(i,'stomp');continue;}
@@ -1084,6 +1114,18 @@
         // Grace zone — descending and close to enemy top, don't punish near-miss stomps
         const inGraceZone=pl.vy>0&&(plFoot-e.y)<14&&(plFoot>e.y);
         if(ovHB(pl,e)&&pl.inv<=0&&!inGraceZone){pl.hp=Math.max(0,pl.hp-1);pl.flash=0.35;pl.inv=0.9;shake(3,0.25);const push=(pl.x+pl.w/2)<(e.x+e.w/2)?-1:1;pl.x+=push*12;pl.vy=Math.min(pl.vy,120);}
+        // Spitter fires yellow projectile toward player
+        if(e.type==='spitter'&&e.shootCd!==undefined){
+          e.shootCd=Math.max(0,e.shootCd-dt);
+          if(e.shootCd<=0){
+            e.shootCd=1.8+Math.random()*1.5;
+            const sx=e.x+e.w/2,sy=e.y+e.h/2;
+            const tx=pl.x+pl.w/2,ty=pl.y+pl.h/2;
+            const dist=Math.max(1,Math.hypot(tx-sx,ty-sy));
+            const spd=130;
+            enemyBullets.push({x:sx,y:sy,vx:(tx-sx)/dist*spd,vy:(ty-sy)/dist*spd,life:3});
+          }
+        }
         const isBossFamily=e.isBig||e.isMini||e.type==='boss'||e.type==='miniBoss'||e.type==='greyBoss'||(typeof e.type==='string'&&e.type.toLowerCase().includes('boss'));
         if(isBossFamily){const tetherX=cx-18;if(e.x+e.w<tetherX){e.x=tetherX-e.w;if(e.vx<0) e.vx=0;}}else{if(e.x+e.w<cx-1200){en.splice(i,1);continue;}}
       }
@@ -1150,6 +1192,17 @@
       }
       for(let i=coinSparkles.length-1;i>=0;i--){const s=coinSparkles[i];s.t+=dt;s.vy+=320*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.t>=s.life) coinSparkles.splice(i,1);}
       updateDroplets(dt);
+      // Enemy bullet update
+      for(let i=enemyBullets.length-1;i>=0;i--){
+        const b=enemyBullets[i];
+        b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+        if(b.life<=0||b.x<cx-200||b.x>cx+W+100){enemyBullets.splice(i,1);continue;}
+        // Hit player
+        if(pl.inv<=0&&b.x>pl.x&&b.x<pl.x+pl.w&&b.y>pl.y&&b.y<pl.y+pl.h){
+          pl.hp=Math.max(0,pl.hp-1);pl.flash=0.35;pl.inv=0.9;shake(3,0.25);
+          spawnTearSplash(b.x,b.y,0);enemyBullets.splice(i,1);
+        }
+      }
       if(pl.onGround){pl._bobT+=dt*8;pl._bobY=Math.sin(pl._bobT)*0.7;}else{pl._bobT=0;pl._bobY=0;}
       cx=Math.max(0,Math.floor(pl.x-W*0.35));ensure();spawnBoss();toastT=Math.max(0,toastT-dt);
       if(pl.hp<=0){st='dead';deadT=0;paused=false;shop=false;shake(6,0.5);}
@@ -1157,10 +1210,10 @@
     function reset(){
       st='playing';paused=false;shop=false;toastT=0;toastS='';
       pl.x=40;pl.y=40;pl.vx=0;pl.vy=0;pl.facing=1;pl.maxH=HB;pl.hp=HB;pl.tear=MAXT;pl.dry=0;pl.scd=0;pl.flash=0;pl.inv=0;pl.stompT=0;pl.artT=0;pl.artCd=0;pl.onGround=false;pl._bobT=0;pl._bobY=0;pl.bounceW=0;pl.hasBomb=false;pl.bombCd=0;pl.hasDoubleJump=false;pl.djUsed=false;pl.noBombCd=false;pl.hasSlam=false;pl.slamming=false;pl._jumpWas=false;
-      coinsN=500;tearC=TC;cd=0.18;lvls.tearDiscount=0;lvls.fasterFire=0;lvls.healHeart=0;
-      bullets.length=0;en.length=0;vials.length=0;splats.length=0;pops.length=0;coinDrops.length=0;tearSplashes.length=0;droplets.length=0;deadGerms.length=0;coinSparkles.length=0;artTearDrops.length=0;tearBombs.length=0;
+      coinsN=0;tearC=TC;cd=0.18;lvls.tearDiscount=0;lvls.fasterFire=0;lvls.healHeart=0;
+      bullets.length=0;en.length=0;vials.length=0;splats.length=0;pops.length=0;coinDrops.length=0;tearSplashes.length=0;droplets.length=0;deadGerms.length=0;coinSparkles.length=0;artTearDrops.length=0;tearBombs.length=0;enemyBullets.length=0;
       cx=0;plats.length=0;plats.push({x:0,y:162,w:260,h:10,vy:0});
-      kills=0;nextBoss=40;nextGrey=100;spT=0;deadT=0;mini=0;greyMini=0;greyPend=false;
+      kills=0;nextBoss=40;nextGrey=100;nextSpitter=20;spT=0;deadT=0;mini=0;greyMini=0;greyPend=false;
       waveN=1;waveKills=0;waveGoal=40;waveBanner=1.5;waveSpawning=true;waveCompletedN=0;
       waveBossSpawned=false;waveBossKilled=false;
       tearRefillCost=5;
