@@ -367,15 +367,13 @@
       const e=en[i];const ex=e.x,ey=e.y;const cx0=e.x+e.w*0.5,cy0=e.y+e.h*0.5;
       if(mode==='stomp'){spl(e);shake(2,0.12);}else if(mode==='shot') spawnPop(cx0,cy0,e.type);
       if(e.type==='miniBoss'){en.splice(i,1);kills++;spawnBoss();onMiniXY(ex,ey);
-        if(!en.some(z=>z.type==='miniBoss'||z.type==='boss'||z.type==='greyBoss')) waveBossKilled=true;
-        if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);
+        if(!en.some(z=>z.type==='miniBoss'||z.type==='boss'||z.type==='greyBoss')){waveBossKilled=true;if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);}
         return;}
       if(e.type==='greyBoss'&&e.isMini){en.splice(i,1);kills++;spawnBoss();onGreyXY(ex,ey);
-        if(!en.some(z=>z.type==='greyBoss'||z.type==='boss'||z.type==='miniBoss')) waveBossKilled=true;
-        if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);
+        if(!en.some(z=>z.type==='greyBoss'||z.type==='boss'||z.type==='miniBoss')){waveBossKilled=true;if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);}
         return;}
-      if(e.type==='greyBoss'){if(!e.isMini) for(let n=0;n<2;n++) dropCoin(e.x+e.w/2-7+(n?10:-10),e.y-10,'silver',-160);splitGrey(e);if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);}
-      else if(e.type==='boss'){if(Math.random()<.15) dropCoin(e.x+e.w/2-7,e.y-10,'silver',-160);splitBoss(e);if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);}
+      if(e.type==='greyBoss'){if(!e.isMini) for(let n=0;n<2;n++) dropCoin(e.x+e.w/2-7+(n?10:-10),e.y-10,'silver',-160);splitGrey(e);}
+      else if(e.type==='boss'){if(Math.random()<.15) dropCoin(e.x+e.w/2-7,e.y-10,'silver',-160);splitBoss(e);}
       else{loot(e.x+e.w/2,e.y);}
       en.splice(i,1);kills++;if(e.type==='red'||e.type==='green'||e.type==='yellow') waveKills++;spawnBoss();
       // After splice+split, check if all boss-family enemies are gone
