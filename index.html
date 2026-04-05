@@ -325,7 +325,7 @@
     function dropCoin(x,y,kind='gold',vy=-140){coinDrops.push({x,y:y-2,w:14,h:10,vy,kind,val:kind==='silver'?5:1,hitPad:0});}
     function loot(x,y){Math.random()<.20?dropCoin(x-2,y-8,'gold',-140):vial(x-6,y,false);}
     function splitBoss(e){const sc=2,sw=MAP.boss[0].length*sc,sh=(MAP.boss.length-1)*sc;for(let k=0;k<3;k++){en.push({x:e.x+(k*(sw+2)-(sw+2)),y:e.y,vx:0,vy:0,w:sw,h:sh,hitPad:3,type:'miniBoss',hp:4,isMini:true,isBig:false});mini++;}}
-    function splitGrey(e){greyMini=3;greyPend=true;for(let k=0;k<3;k++) en.push({x:e.x+(k*18-18),y:e.y,vx:0,vy:0,w:27,h:24,hitPad:3,type:'greyBoss',hp:20,isBig:true,isMini:true,_bombImmune:0.15});}
+    function splitGrey(e){greyMini+=3;greyPend=true;for(let k=0;k<3;k++) en.push({x:e.x+(k*18-18),y:e.y,vx:0,vy:0,w:27,h:24,hitPad:3,type:'greyBoss',hp:20,isBig:true,isMini:true,_bombImmune:0.15});}
     function onMiniXY(x,y){mini=Math.max(0,mini-1);if(!en.some(z=>z.type==='miniBoss')){mini=0;vial(x,y,true);vial(x-14,y,false);vial(x+14,y,false);}else{vial(x,y,false);}}
     function onGreyXY(x,y){greyMini=Math.max(0,greyMini-1);if(greyMini===0&&greyPend){greyPend=false;vial(x-16,y,true);vial(x+16,y,true);vial(x-8,y,false);vial(x+8,y,false);}else{vial(x,y,false);}}
     function maybeBossArtDrop(x,y){if(Math.random()<0.03) spawnArtTearDrop(x,y);}
