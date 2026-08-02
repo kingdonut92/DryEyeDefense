@@ -1253,13 +1253,13 @@ function playShoot(){
       }
       for(let i=vials.length-1;i>=0;i--){
         const v=vials[i];if(!v.landed){v.vy+=G*dt;v.y+=v.vy*dt;if(land(v,18)){v.landed=true;v.vy=0;v.baseY=v.y;}}else{v.phase+=dt*2.2;v.y=v.baseY+Math.sin(v.phase)*1.5;}
-        if(ovHB(pl,v)){if(v.isBig){pl.hp=clamp(pl.hp+1,0,pl.maxH);}else{pl.tear=clamp(pl.tear+TPV,0,MAXT);};playCollect();vials.splice(i,1);}
+        if(ovHB(pl,v)){if(v.isBig){pl.hp=clamp(pl.hp+1,0,pl.maxH);}else{pl.tear=clamp(pl.tear+TPV,0,MAXT);}playCollect();vials.splice(i,1);}
       }
       for(let i=artTearDrops.length-1;i>=0;i--){
         const v=artTearDrops[i];if(!v.landed){v.vy+=G*dt;v.y+=v.vy*dt;if(land(v,24)){v.landed=true;v.vy=0;v.baseY=v.y;}}else{v.phase+=dt*1.8;v.y=v.baseY+Math.sin(v.phase)*2.5;}
         if(ovHB(pl,v)){pl.artT=15;pl.artCd=Math.max(pl.artCd,15);toast('ARTIFICIAL TEARS!',1.5);artTearDrops.splice(i,1);}
       }
-      for(let i=coinDrops.length-1;i>=0;i--){const c=coinDrops[i];c.vy+=G*dt;c.y+=c.vy*dt;if(land(c,18)) c.vy=0;if(ovHB(pl,c)){coinsN+=(c.val|0)||1;spawnCoinSparkles(c.x+c.w*0.5,c.y+c.h*0.5,c.kind);for(let i=coinDrops.length-1;i>=0;i--){const c=coinDrops[i];c.vy+=G*dt;c.y+=c.vy*dt;if(land(c,18)) c.vy=0;if(ovHB(pl,c)){coinsN+=(c.val|0)||1;spawnCoinSparkles(c.x+c.w*0.5,c.y+c.h*0.5,c.kind);coinDrops.splice(i,1);playCollect();coinDrops.splice(i,1);}}
+      for(let i=coinDrops.length-1;i>=0;i--){const c=coinDrops[i];c.vy+=G*dt;c.y+=c.vy*dt;if(land(c,18)) c.vy=0;if(ovHB(pl,c)){coinsN+=(c.val|0)||1;spawnCoinSparkles(c.x+c.w*0.5,c.y+c.h*0.5,c.kind);playCollect();coinDrops.splice(i,1);}}
       for(let i=splats.length-1;i>=0;i--){const s=splats[i];s.t+=dt;if(s.t>=s.life) splats.splice(i,1);}
       for(let i=pops.length-1;i>=0;i--){
         const p=pops[i];
