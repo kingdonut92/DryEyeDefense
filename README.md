@@ -28,3 +28,5 @@ v0.3 Major update to mobile UI and gameplay. Changed graphics, enemy AI actions 
 v0.4 HUGE UPDATE added new enemy, new weapon, new layouts and changed game layout and playability
 
 v0.5 Added code layout for sound effects, added jump sound effect - 08/01/2026
+
+V0.6 Added shoot sound effect and item collection sound effect 8/01/2026
