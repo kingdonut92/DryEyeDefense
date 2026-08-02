@@ -263,25 +263,41 @@ function playShoot(){
   function playDamage(){
   if(!actx) return;
   const t=actx.currentTime;
-  const o1=actx.createOscillator();
-  const g1=actx.createGain();
-  o1.type='sawtooth';
-  o1.frequency.setValueAtTime(220,t);
-  o1.frequency.exponentialRampToValueAtTime(110,t+0.15);
-  g1.gain.setValueAtTime(0.16,t);
-  g1.gain.exponentialRampToValueAtTime(0.001,t+0.18);
-  o1.connect(g1);g1.connect(actx.destination);
-  o1.start(t);o1.stop(t+0.19);
 
-  const o2=actx.createOscillator();
-  const g2=actx.createGain();
-  o2.type='sawtooth';
-  o2.frequency.setValueAtTime(233,t);
-  g2.gain.setValueAtTime(0.10,t);
-  g2.gain.exponentialRampToValueAtTime(0.001,t+0.1);
-  o2.connect(g2);g2.connect(actx.destination);
-  o2.start(t);o2.stop(t+0.11);
+  // THUD — sharp low-frequency punch
+  const thud=actx.createOscillator();
+  const thudGain=actx.createGain();
+  thud.type='sine';
+  thud.frequency.setValueAtTime(150,t);
+  thud.frequency.exponentialRampToValueAtTime(45,t+0.07);
+  thudGain.gain.setValueAtTime(0.35,t);
+  thudGain.gain.exponentialRampToValueAtTime(0.001,t+0.12);
+  thud.connect(thudGain);thudGain.connect(actx.destination);
+  thud.start(t);thud.stop(t+0.13);
 
+  // BUZZZZT — sustained buzzy tone, right after the thud
+  const buzzStart=t+0.06;
+  const buzz=actx.createOscillator();
+  const buzzGain=actx.createGain();
+  buzz.type='sawtooth';
+  buzz.frequency.setValueAtTime(90,buzzStart);
+  buzz.frequency.exponentialRampToValueAtTime(55,buzzStart+0.35);
+
+  // LFO chops the buzz tone's volume rapidly — this is what makes it "buzz" instead of hum
+  const lfo=actx.createOscillator();
+  const lfoGain=actx.createGain();
+  lfo.type='square';
+  lfo.frequency.setValueAtTime(45,buzzStart);
+  lfoGain.gain.setValueAtTime(0.14,buzzStart);
+  lfo.connect(lfoGain);lfoGain.connect(buzzGain.gain);
+
+  buzzGain.gain.setValueAtTime(0.16,buzzStart);
+  buzzGain.gain.exponentialRampToValueAtTime(0.001,buzzStart+0.38);
+  buzz.connect(buzzGain);buzzGain.connect(actx.destination);
+  buzz.start(buzzStart);buzz.stop(buzzStart+0.4);
+  lfo.start(buzzStart);lfo.stop(buzzStart+0.4);
+
+  // Noise burst under the thud for extra impact
   const bufferSize=actx.sampleRate*0.08;
   const buffer=actx.createBuffer(1,bufferSize,actx.sampleRate);
   const data=buffer.getChannelData(0);
