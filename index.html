@@ -1360,7 +1360,7 @@ function playShoot(){
     setInterval(()=>{if(bombBtn){if(pl.hasBomb&&pl.tear>=MAXT*0.5&&pl.bombCd<=0){bombBtn.classList.remove('locked');bombBtn.style.opacity='1';}else{bombBtn.classList.add('locked');bombBtn.style.opacity=pl.hasBomb?'0.5':'0.25';}}},100);
     if(typeof spawnTearSplash!=='function') throw new Error('spawnTearSplash missing');
     requestAnimationFrame(loop);
-  })();
+  }();
   </script>
 </body>
 </html>
