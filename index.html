@@ -41,6 +41,7 @@
   </style>
 </head>
 <body>
+  <audio id="bgMusic" src="Electrons_moving.m4a" loop preload="auto"></audio>
   <div id="stage">
     <div id="wrap">
       <canvas id="game" width="320" height="180"></canvas>
@@ -82,6 +83,7 @@
     const uicv=document.getElementById('ui');
     const uictx=uicv.getContext('2d');
     const stage=document.getElementById('stage');
+    const bgMusic=document.getElementById('bgMusic');bgMusic.volume=0.3;    
     if(!cv||!ctx||!uicv||!uictx||!stage) throw new Error('Canvas init failed');
 
     ctx.imageSmoothingEnabled=false;
@@ -1416,7 +1418,7 @@ function playShoot(){
       tearRefillCost=5;
       shakeT=0;shakeMag=0;ensure();
     }
-    function start(){if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;}else{reset();}}
+    function start(){if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;bgMusic.play().catch(()=>{});}else{reset();}}
     const toGamePt=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};};
     const inBtn=(p,b)=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h;
     cv.addEventListener('pointerdown',e=>{
