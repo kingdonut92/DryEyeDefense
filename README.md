@@ -30,3 +30,5 @@ v0.4 HUGE UPDATE added new enemy, new weapon, new layouts and changed game layou
 v0.5 Added code layout for sound effects, added jump sound effect - 08/01/2026
 
 V0.6 Added shoot sound effect and item collection sound effect 8/01/2026
+
+v0.7 added background music 8/02/2026
