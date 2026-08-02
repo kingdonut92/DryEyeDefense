@@ -1132,7 +1132,7 @@ function playShoot(){
         }
       }
       if(pl.y>400){pl.hp=0;}
-      if(inp.s()&&pl.tear>0&&pl.scd<=0){const sx=pl.x+pl.w/2,sy=pl.y+pl.h/2;bullets.push({x:sx+pl.facing*8,y:sy-4,vx:BS*pl.facing,vy:0,w:8,h:8,hitPad:0});if(pl.artT<=0) pl.tear=clamp(pl.tear-tearC,0,MAXT);pl.scd=cd;spawnTearSplash(sx,sy,pl.facing);}
+   if(inp.s()&&pl.tear>0&&pl.scd<=0){const sx=pl.x+pl.w/2,sy=pl.y+pl.h/2;bullets.push({x:sx+pl.facing*8,y:sy-4,vx:BS*pl.facing,vy:0,w:8,h:8,hitPad:0});playShoot();if(pl.artT<=0) pl.tear=clamp(pl.tear-tearC,0,MAXT);pl.scd=cd;spawnTearSplash(sx,sy,pl.facing);}
       pl.scd=Math.max(0,pl.scd-dt);
       pl.bombCd=Math.max(0,pl.bombCd-dt);
       // Tear bomb — needs full tears, unlocked, no cooldown
