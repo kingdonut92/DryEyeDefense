@@ -234,7 +234,32 @@ function playShoot(){
     o.connect(g);g.connect(actx.destination);
     o.start(t+i*step);o.stop(t+i*step+step);
   }
-}     
+}  
+  function playPop(){
+  if(!actx) return;
+  const t=actx.currentTime;
+  const o=actx.createOscillator();
+  const g=actx.createGain();
+  o.type='square';
+  o.frequency.setValueAtTime(180,t);
+  o.frequency.exponentialRampToValueAtTime(40,t+0.09);
+  g.gain.setValueAtTime(0.18,t);
+  g.gain.exponentialRampToValueAtTime(0.001,t+0.11);
+  o.connect(g);g.connect(actx.destination);
+  o.start(t);o.stop(t+0.12);
+
+  const bufferSize=actx.sampleRate*0.06;
+  const buffer=actx.createBuffer(1,bufferSize,actx.sampleRate);
+  const data=buffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++){data[i]=(Math.random()*2-1)*(1-i/bufferSize);}
+  const noise=actx.createBufferSource();
+  noise.buffer=buffer;
+  const ng=actx.createGain();
+  ng.gain.setValueAtTime(0.15,t);
+  ng.gain.exponentialRampToValueAtTime(0.001,t+0.06);
+  noise.connect(ng);ng.connect(actx.destination);
+  noise.start(t);
+}
     const G=700,WL=0,MS=145,JS=-250,BS=280,MAXT=100,TC=3,TPV=30,EMPTY=2200,HB=3,HC=8;
     const LAND_SPLASH_MIN_VY=140,LAND_SPLASH_COUNT_MIN=6,LAND_SPLASH_COUNT_MAX=10;
     let coinsN=0,tearC=TC,cd=0.18;
@@ -433,7 +458,7 @@ function playShoot(){
     }
     function kill(i,mode){
       const e=en[i];const ex=e.x,ey=e.y;const cx0=e.x+e.w*0.5,cy0=e.y+e.h*0.5;
-      if(mode==='stomp'){spl(e);shake(2,0.12);}else if(mode==='shot') spawnPop(cx0,cy0,e.type);
+      if(mode==='stomp'){spl(e);shake(2,0.12);}else if(mode==='shot') spawnPop(cx0,cy0,e.type);playPop();
       if(e.type==='miniBoss'){en.splice(i,1);kills++;spawnBoss();onMiniXY(ex,ey);
         if(!en.some(z=>z.type==='miniBoss'||z.type==='boss'||z.type==='greyBoss')){waveBossKilled=true;if(Math.random()<0.05) spawnArtTearDrop(cx0,ey);}
         return;}
