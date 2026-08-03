@@ -1418,10 +1418,12 @@ function playShoot(){
       tearRefillCost=5;
       shakeT=0;shakeMag=0;ensure();
     }
-    function start(){if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;bgMusic.play().catch(err=>alert('Music failed: '+err.name+' - '+err.message));}else{reset();}}
+    function start(){if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;bgMusic.play().catch(()=>{});}else{reset();}}
     const toGamePt=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};};
     const inBtn=(p,b)=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h;
-    cv.addEventListener('pointerdown',e=>{
+    cv.addEventListener('click',()=>{
+  if(bgMusic.paused) bgMusic.play().catch(()=>{});
+});
       ensureAudio();
       const p=toGamePt(e);
       if(st==='title'){start();return;}if(st==='tutorial'){tutPage=1;st='controls2';paused=false;shop=false;return;}if(st==='controls2'){tutPage=0;reset();return;}if(st==='controls'){tutPage=0;reset();return;}if(st==='dead'){if(inBtn(p,btnRe)) reset();return;}
