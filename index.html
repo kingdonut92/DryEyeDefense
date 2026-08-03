@@ -1433,14 +1433,6 @@ function playShoot(){
     cv.addEventListener('click',()=>{
       if(bgMusic.paused) bgMusic.play().catch(()=>{});
     });
-      ensureAudio();
-      const p=toGamePt(e);
-      if(st==='title'){start();return;}if(st==='tutorial'){tutPage=1;st='controls2';paused=false;shop=false;return;}if(st==='controls2'){tutPage=0;reset();return;}if(st==='controls'){tutPage=0;reset();return;}if(st==='dead'){if(inBtn(p,btnRe)) reset();return;}
-      if(paused&&st==='playing'&&window._pauseBtns){
-        if(inBtn(p,window._pauseBtns.restart)){paused=false;reset();return;}
-        if(inBtn(p,window._pauseBtns.quit)){paused=false;st='title';tutorial=false;titleEye=null;titleGerm=null;_drips.length=0;return;}
-      }
-    },{passive:true});
     function loop(ts){if(!last) last=ts;const dt=Math.min(0.033,(ts-last)/1000);last=ts;gt+=dt;if(st==='dead') deadT+=dt;update(dt);render();requestAnimationFrame(loop);}
     resize();touch();ensure();
     // Keep bomb button visually updated
