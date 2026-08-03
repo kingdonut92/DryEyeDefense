@@ -1421,9 +1421,18 @@ function playShoot(){
     function start(){if(!tutorial){tutorial=true;st='tutorial';paused=false;shop=false;bgMusic.play().catch(()=>{});}else{reset();}}
     const toGamePt=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(W/r.width),y:(e.clientY-r.top)*(H/r.height)};};
     const inBtn=(p,b)=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h;
+    cv.addEventListener('pointerdown',e=>{
+      ensureAudio();
+      const p=toGamePt(e);
+      if(st==='title'){start();return;}if(st==='tutorial'){tutPage=1;st='controls2';paused=false;shop=false;return;}if(st==='controls2'){tutPage=0;reset();return;}if(st==='controls'){tutPage=0;reset();return;}if(st==='dead'){if(inBtn(p,btnRe)) reset();return;}
+      if(paused&&st==='playing'&&window._pauseBtns){
+        if(inBtn(p,window._pauseBtns.restart)){paused=false;reset();return;}
+        if(inBtn(p,window._pauseBtns.quit)){paused=false;st='title';tutorial=false;titleEye=null;titleGerm=null;_drips.length=0;return;}
+      }
+    },{passive:true});
     cv.addEventListener('click',()=>{
-  if(bgMusic.paused) bgMusic.play().catch(()=>{});
-});
+      if(bgMusic.paused) bgMusic.play().catch(()=>{});
+    });
       ensureAudio();
       const p=toGamePt(e);
       if(st==='title'){start();return;}if(st==='tutorial'){tutPage=1;st='controls2';paused=false;shop=false;return;}if(st==='controls2'){tutPage=0;reset();return;}if(st==='controls'){tutPage=0;reset();return;}if(st==='dead'){if(inBtn(p,btnRe)) reset();return;}
