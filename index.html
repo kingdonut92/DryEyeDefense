@@ -1214,8 +1214,7 @@ waveBossSpawned=true;waveBossKilled=false;
         for(const g of deadGerms){g.vy+=520*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;if(g.x<0){g.x=0;g.vx=Math.abs(g.vx);}if(g.x>W-18){g.x=W-18;g.vx=-Math.abs(g.vx);}if(g.y>H-18){g.y=H-18;g.vy=-(120+Math.random()*140);}px(g.type==='red'?MAP.red:MAP.green,g.type==='red'?COL.red:COL.green,Math.round(g.x),Math.round(g.y),2,false);}
         const bw2=120,bh2=24,bx2=(W/2)-bw2/2,by2=H-40;btnRe.x=bx2;btnRe.y=by2;btnRe.w=bw2;btnRe.h=bh2;
         ctx.fillStyle='#102033';ctx.fillRect(bx2,by2,bw2,bh2);ctx.strokeStyle='#58c4ff';ctx.strokeRect(bx2,by2,bw2,bh2);uiTxt('Rehydrate?',(W/2),by2+bh2/2+5,10,'#8bd9ff','center','middle','900');
-      }
-        drawWaveFlash();
+      drawWaveFlash();}
     }
     function update(dt){
       if(st!=='playing'||paused||shop) return;
