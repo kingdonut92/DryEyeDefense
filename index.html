@@ -361,8 +361,8 @@ function playShoot(){
     let shakeT=0,shakeMag=0;
     const shake=(mag,dur)=>{shakeMag=Math.max(shakeMag,mag);shakeT=Math.max(shakeT,dur);};
     // Wave system
-    let waveN=1,waveKills=0,waveGoal=40,waveBanner=0,waveSpawning=true,waveCompletedN=0;
-    const plats=[{x:0,y:162,w:260,h:10,vy:0}];
+    let waveN=1,waveKills=0,waveGoal=40,waveBanner=0,waveSpawning=true,waveCompletedN=0,waveFlashT=0;
+const WAVE_FLASH_DUR=0.5;
 
 function playBossRumble(){
   if(!actx) return;
@@ -965,7 +965,29 @@ waveBossSpawned=true;waveBossKilled=false;
         }
       }
     }
-    function render(){
+    function drawWaveFlash(){
+  if(waveFlashT<=0) return;
+  const prog=1-(waveFlashT/WAVE_FLASH_DUR);
+  let alpha;
+  if(prog<0.25) alpha=prog/0.25;
+  else if(prog<0.4) alpha=1;
+  else alpha=Math.max(0,1-((prog-0.4)/0.6));
+  const cols=['#ff3b6b','#ffe44a','#58c4ff','#58ffaa','#ff8c00','#b45bff','#ffffff'];
+  const block=10;
+  const cxN=Math.ceil(W/block),cyN=Math.ceil(H/block);
+  const seed=Math.floor(prog*14);
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  for(let gy=0;gy<cyN;gy++){
+    for(let gx=0;gx<cxN;gx++){
+      const idx=(gx*13+gy*7+seed*31)%cols.length;
+      ctx.fillStyle=cols[idx];
+      ctx.fillRect(gx*block,gy*block,block,block);
+    }
+  }
+  ctx.restore();
+}
+      function render(){
       uiClr();
       if(st==='title'){title();return;}if(st==='tutorial'){tut();return;}if(st==='controls2'){tut2();return;}if(st==='controls'){ctrls();return;}
       ctx.clearRect(0,0,W,H);bg();
@@ -1193,6 +1215,7 @@ waveBossSpawned=true;waveBossKilled=false;
         const bw2=120,bh2=24,bx2=(W/2)-bw2/2,by2=H-40;btnRe.x=bx2;btnRe.y=by2;btnRe.w=bw2;btnRe.h=bh2;
         ctx.fillStyle='#102033';ctx.fillRect(bx2,by2,bw2,bh2);ctx.strokeStyle='#58c4ff';ctx.strokeRect(bx2,by2,bw2,bh2);uiTxt('Rehydrate?',(W/2),by2+bh2/2+5,10,'#8bd9ff','center','middle','900');
       }
+        drawWaveFlash();
     }
     function update(dt){
       if(st!=='playing'||paused||shop) return;
@@ -1262,6 +1285,7 @@ waveBossSpawned=true;waveBossKilled=false;
 
       // Wave logic
       if(waveBanner>0) waveBanner=Math.max(0,waveBanner-dt);
+      if(waveFlashT>0) waveFlashT=Math.max(0,waveFlashT-dt);
       if(waveSpawning&&waveKills<waveGoal){
         spT-=dt;
         if(spT<=0){
@@ -1302,7 +1326,7 @@ waveBossSpawned=true;waveBossKilled=false;
       // Boss killed — wave complete
       if(waveSpawning&&waveBossSpawned&&waveBossKilled&&(waveN>10||!en.some(z=>z.type==='boss'||z.type==='miniBoss'||z.type==='greyBoss'))){
         waveCompletedN=waveN;
-        waveSpawning=false;waveBanner=2.5;shake(2,0.3);waveBossKilled=false;waveBossSpawned=false;
+waveSpawning=false;waveBanner=2.5;shake(2,0.3);waveFlashT=WAVE_FLASH_DUR;waveBossKilled=false;waveBossSpawned=false;
         setTimeout(()=>{
           waveN++;waveGoal=waveN*40;waveKills=0;waveSpawning=true;waveBanner=1.5;
           waveBossSpawned=false;waveBossKilled=false;spT=0;
