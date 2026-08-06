@@ -1205,17 +1205,62 @@ waveBossSpawned=true;waveBossKilled=false;
           window._pauseBtns.quit={x:qbx,y:qby,w:qbw,h:qbh};
         }
       }
-      if(st==='dead'){
-        ctx.fillStyle='rgba(0,0,0,.8)';ctx.fillRect(0,0,W,H);const cx0=W/2,cy0=H/2;const r=30*(1+Math.min(deadT*1.5,2.5));
-        ctx.beginPath();ctx.arc(cx0,cy0,r,0,Math.PI*2);ctx.fillStyle='#ffb3c7';ctx.fill();ctx.beginPath();ctx.arc(cx0,cy0,r*.5,0,Math.PI*2);ctx.fillStyle='#ff3b6b';ctx.fill();ctx.beginPath();ctx.arc(cx0,cy0,r*.25,0,Math.PI*2);ctx.fillStyle='#120016';ctx.fill();
-        uiTxt('DRY EYE',(W/2),42,18,(Math.floor(deadT*6)%2)===0?'#66b3ff':'#ffe44a','center','middle','900');
-        if(deadGerms.length===0){for(let i=0;i<18;i++) deadGerms.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()*2-1)*70,vy:-(80+Math.random()*120),type:(Math.random()<.5?'red':'green')});}
-        ctx.fillStyle='rgba(180,0,20,.18)';ctx.fillRect(0,0,W,H);const dt=1/60;
-        for(const g of deadGerms){g.vy+=520*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;if(g.x<0){g.x=0;g.vx=Math.abs(g.vx);}if(g.x>W-18){g.x=W-18;g.vx=-Math.abs(g.vx);}if(g.y>H-18){g.y=H-18;g.vy=-(120+Math.random()*140);}px(g.type==='red'?MAP.red:MAP.green,g.type==='red'?COL.red:COL.green,Math.round(g.x),Math.round(g.y),2,false);}
-        const bw2=120,bh2=24,bx2=(W/2)-bw2/2,by2=H-40;btnRe.x=bx2;btnRe.y=by2;btnRe.w=bw2;btnRe.h=bh2;
-        ctx.fillStyle='#102033';ctx.fillRect(bx2,by2,bw2,bh2);ctx.strokeStyle='#58c4ff';ctx.strokeRect(bx2,by2,bw2,bh2);uiTxt('Rehydrate?',(W/2),by2+bh2/2+5,10,'#8bd9ff','center','middle','900');
-      drawWaveFlash();}
+if (st === 'dead') {
+  // 1. Dark Background & Central Eye Graphic
+  ctx.fillStyle = 'rgba(0,0,0,.8)';
+  ctx.fillRect(0, 0, W, H);
+
+  const cx0 = W / 2, cy0 = H / 2;
+  const r = 30 * (1 + Math.min(deadT * 1.5, 2.5));
+
+  ctx.beginPath(); ctx.arc(cx0, cy0, r, 0, Math.PI * 2); ctx.fillStyle = '#ffb3c7'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx0, cy0, r * 0.5, 0, Math.PI * 2); ctx.fillStyle = '#ff3b6b'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx0, cy0, r * 0.25, 0, Math.PI * 2); ctx.fillStyle = '#120016'; ctx.fill();
+
+  // 2. Germ Particles
+  if (deadGerms.length === 0) {
+    for (let i = 0; i < 18; i++) {
+      deadGerms.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() * 2 - 1) * 70,
+        vy: -(80 + Math.random() * 120),
+        type: Math.random() < 0.5 ? 'red' : 'green'
+      });
     }
+  }
+
+  ctx.fillStyle = 'rgba(180,0,20,.18)';
+  ctx.fillRect(0, 0, W, H);
+
+  const dt = 1 / 60;
+  for (const g of deadGerms) {
+    g.vy += 520 * dt; g.x += g.vx * dt; g.y += g.vy * dt;
+    if (g.x < 0) { g.x = 0; g.vx = Math.abs(g.vx); }
+    if (g.x > W - 18) { g.x = W - 18; g.vx = -Math.abs(g.vx); }
+    if (g.y > H - 18) { g.y = H - 18; g.vy = -(120 + Math.random() * 140); }
+    px(g.type === 'red' ? MAP.red : MAP.green, g.type === 'red' ? COL.red : COL.green, Math.round(g.x), Math.round(g.y), 2, false);
+  }
+
+  // -------------------------------------------------------------------
+  // 3. WAVE FLASH EFFECT PLACEMENT
+  // Rendered OVER the eye & particles, but UNDER the UI/Text
+  // -------------------------------------------------------------------
+  drawWaveFlash();
+
+  // 4. UI Layer (Title & Interactive Button)
+  uiTxt('DRY EYE', (W / 2), 42, 18, (Math.floor(deadT * 6) % 2) === 0 ? '#66b3ff' : '#ffe44a', 'center', 'middle', '900');
+
+  const bw2 = 120, bh2 = 24, bx2 = (W / 2) - bw2 / 2, by2 = H - 40;
+  btnRe.x = bx2; btnRe.y = by2; btnRe.w = bw2; btnRe.h = bh2;
+
+  ctx.fillStyle = '#102033';
+  ctx.fillRect(bx2, by2, bw2, bh2);
+  ctx.strokeStyle = '#58c4ff';
+  ctx.strokeRect(bx2, by2, bw2, bh2);
+
+  uiTxt('Rehydrate?', (W / 2), by2 + bh2 / 2 + 5, 10, '#8bd9ff', 'center', 'middle', '900');
+}
     function update(dt){
       if(st!=='playing'||paused||shop) return;
       pl.stompT=Math.max(0,pl.stompT-dt);pl.artT=Math.max(0,pl.artT-dt);
