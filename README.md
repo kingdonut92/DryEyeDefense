@@ -1,10 +1,10 @@
 Dry Eye Defense
 
-This is a homage to retro gaming. I grew up playing classic arcade game collections like Taito, Midway, and tons of other underground game collections with my dad. That really built a deep appreciation for all walks of games for me. This being my first game I didn't want to get too complex, really just testing my ability. 
+I grew up playing classic arcade game collections like Taito, Midway, and tons of other underground game collections with my dad. That really built a deep appreciation for all walks of games for me. This being my first game I didn't want to get too complex, really just testing my ability. 
 
-I used ChatGPT to help write code for the game while I spent hours and hours of developmental gameplay working out the proper game mechanics, bugs, and quirks. This game really REALLY put my video-game logic brain to the ultimate test. Coding AI really only does exactly what you tell it to, so I needed to think through every tiny little detail and make this game feel as organic and genuine as possible. From control layout, to physics, to enemy behavior, this really was like, piecing together a new recipe for something you've never eaten before. I hope you all enjoy playing it as much as I enjoyed making it. 
+I used ChatGPT and Claude to help me learn and understand and write code for the game while I spent hours and hours of developmental gameplay working out the proper game mechanics, bugs, and quirks. This game really REALLY put my video-game logic brain to the ultimate test. AI Coding really helps flesh out the idea but, I needed to think through every tiny little detail and make this game feel as organic and genuine as possible. From control layout, to physics, to enemy behavior, this really was like, piecing together a new recipe for something you've never cooked or eaten before. I hope you all enjoy playing it as much as I enjoyed making it. 
 
-Dry Eye Defense is a fast-paced pixel-art action game about surviving waves of germs using tear power. The goal is to collect coins and max out your upgrades while trying to survive as long as you can. 
+Dry Eye Defense is a fast-paced pixel-art action-shooter wave survival game. The goal is to collect coins and max out your upgrades while trying to survive as long as you can. 
 
 Play here: https://kingdonut92.github.io/DryEyeDefense/
 
@@ -15,11 +15,9 @@ Controls
 - Shop: B
 - Pause: P or Esc
 
-Built with pure HTML5 Canvas + JavaScript
+Built with HTML5 Canvas + JavaScript
 
 this is v0.1, first playable public build. -12/26/2025
-
-I am currently designing all the audio, which will be patched into the game soon!
 
 v0.2 Fixed minor bug and syntax errors, added new splash and water physics plus additional jump mechanic. -12/27/2025
 
@@ -32,3 +30,5 @@ v0.5 Added code layout for sound effects, added jump sound effect - 08/01/2026
 V0.6 Added shoot sound effect and item collection sound effect 8/01/2026
 
 v0.7 added background music 8/02/2026
+
+v0.8 added wave completion flash effects 8/06/2026
