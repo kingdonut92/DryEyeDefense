@@ -436,26 +436,26 @@ function playBossRumble(){
       shake(purples>0?3:4,0.5);playBossRumble();
 waveBossSpawned=true;waveBossKilled=false;
     }
-    function spawnBoss(){
-      if(waveN>=4&&kills>=nextSpitter){
-        nextSpitter+=40;
-        const sc=3,bw=MAP.boss[0].length*sc,bh=(MAP.boss.length-1)*sc;
-        en.push({x:cx+W+40,y:162-bh,vx:0,vy:0,w:bw,h:bh,hitPad:3,type:'spitter',hp:8,isBig:false,isMini:false,shootCd:1.5+Math.random()*1.5});
-        shake(2,0.2);
-      }
-      if(waveN<=10) return;
-      if(kills>=nextBoss){
-  nextBoss+=40;
-  en.push({x:cx+W+40,y:132,vx:0,vy:0,w:27,h:24,hitPad:3,type:'boss',hp:20,isBig:true});
-  shake(3,0.4);playBossRumble();
-}
-      }
-      if(kills>=nextGrey){
-  nextGrey+=100;
-  const alive=en.some(e=>e.type==='greyBoss'&&!e.isMini);
-  if(!alive){
-    en.push({x:cx+W+60,y:102,vx:0,vy:0,w:54,h:48,hitPad:6,type:'greyBoss',hp:40,isBig:true,isMini:false});
-    shake(4,0.5);playBossRumble();
+function spawnBoss(){
+  if(waveN>=4&&kills>=nextSpitter){
+    nextSpitter+=40;
+    const sc=3,bw=MAP.boss[0].length*sc,bh=(MAP.boss.length-1)*sc;
+    en.push({x:cx+W+40,y:162-bh,vx:0,vy:0,w:bw,h:bh,hitPad:3,type:'spitter',hp:8,isBig:false,isMini:false,shootCd:1.5+Math.random()*1.5});
+    shake(2,0.2);
+  }
+  if(waveN<=10) return;
+  if(kills>=nextBoss){
+    nextBoss+=40;
+    en.push({x:cx+W+40,y:132,vx:0,vy:0,w:27,h:24,hitPad:3,type:'boss',hp:20,isBig:true});
+    shake(3,0.4);playBossRumble();
+  }
+  if(kills>=nextGrey){
+    nextGrey+=100;
+    const alive=en.some(e=>e.type==='greyBoss'&&!e.isMini);
+    if(!alive){
+      en.push({x:cx+W+60,y:102,vx:0,vy:0,w:54,h:48,hitPad:6,type:'greyBoss',hp:40,isBig:true,isMini:false});
+      shake(4,0.5);playBossRumble();
+    }
   }
 }
     const spl=e=>{
