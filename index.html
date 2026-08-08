@@ -821,25 +821,26 @@
         else{drawEye(pl.x,pl.y+bobY,flip,eyeCols);}
       }
       ctx.restore();
-
-      if(st!=='dead'){
-        uictx.save();uictx.globalAlpha=shop?0.15:1;
-        const bx=10,by=10,bw=100,bh=8;
-        uictx.strokeStyle='#000';
-        uictx.lineWidth=1;
-        uictx.strokeRect(bx-1,by-1,bw+2,bh+2);
-        uictx.fillStyle='#222b3a';
-        uictx.fillRect(bx-1,by-1,bw+2,bh+2);
-        uictx.fillStyle='#58c4ff';
-        uictx.fillRect(bx,by,bw*(pl.tear/MAXT),bh);
-        uiTxt('TEARS',bx,by+bh+13,7,'#8bd9ff','left','alphabetic','800');
-        for(let i=0;i<pl.maxH;i++){
-          const hx=10+i*12,hy=30;
-          uictx.strokeStyle='#000';uictx.lineWidth=1;uictx.strokeRect(hx,hy,10,10);
-          uictx.strokeStyle='#ff5555';uictx.strokeRect(hx+0.5,hy+0.5,9,9);
-          if(i<pl.hp){uictx.fillStyle='#ff5555';uictx.fillRect(hx+2,hy+2,6,6);}
-        }
-        uiTxt('HEALTH',10,54,7,'#8bd9ff','left','alphabetic','800');
+drawWaveFlash();
+ if(st!=='dead'){
+  uictx.save();uictx.globalAlpha=shop?0.15:1;
+  const s=S||1;
+  const bx=10*s,by=10*s,bw=100*s,bh=8*s;
+  uictx.strokeStyle='#000';
+  uictx.lineWidth=1;
+  uictx.strokeRect(bx-1,by-1,bw+2,bh+2);
+  uictx.fillStyle='#222b3a';
+  uictx.fillRect(bx-1,by-1,bw+2,bh+2);
+  uictx.fillStyle='#58c4ff';
+  uictx.fillRect(bx,by,bw*(pl.tear/MAXT),bh);
+  uiTxt('TEARS',10,10+8+13,7,'#8bd9ff','left','alphabetic','800');
+  for(let i=0;i<pl.maxH;i++){
+    const hx=(10+i*12)*s,hy=30*s,hs=10*s;
+    uictx.strokeStyle='#000';uictx.lineWidth=1;uictx.strokeRect(hx,hy,hs,hs);
+    uictx.strokeStyle='#ff5555';uictx.strokeRect(hx+0.5,hy+0.5,hs-1,hs-1);
+    if(i<pl.hp){uictx.fillStyle='#ff5555';uictx.fillRect(hx+2*s,hy+2*s,6*s,6*s);}
+  }
+  uiTxt('HEALTH',10,54,7,'#8bd9ff','left','alphabetic','800');
         uiTxt('WAVE: '+waveN,W-8,18,9,'#8bd9ff','right','alphabetic','800');
         const killsLabel=waveN>10?kills:(waveBossSpawned?'BOSS!':waveKills+'/'+waveGoal);
         const killsCol=waveBossSpawned&&waveN<=10?'#ff88cc':'#8bd9ff';
