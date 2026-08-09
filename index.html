@@ -280,7 +280,7 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
     const shake=(mag,dur)=>{shakeMag=Math.max(shakeMag,mag);shakeT=Math.max(shakeT,dur);};
 
     let waveN=1,waveKills=0,waveGoal=40,waveBanner=0,waveSpawning=true,waveCompletedN=0,waveFlashT=0;
-    const WAVE_FLASH_DUR=1.4;
+    const WAVE_FLASH_DUR=1.0;
     const plats=[{x:0,y:162,w:260,h:10,vy:0}];
     let waveBossSpawned=false,waveBossKilled=false;
 
@@ -835,7 +835,7 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
       const shOY=(shakeT>0)?(Math.random()*2-1)*shakeMag:0;
       ctx.save();ctx.translate(-cx+shOX,shOY);
       drawDroplets();drawPlatforms();
-      for(const v of vials) v.isBig?px(MAP.bigv,COL.bigv,v.x,v.y,2):px(MAP.tearBox,COL.tearBox,v.x,v.y,2);
+      for(const v of vials) v.isBig?px(HEART_BMP,{'#':'#ff5566'},v.x,v.y,3):px(MAP.tearBox,COL.tearBox,v.x,v.y,2);
       for(const v of artTearDrops) drawArtTearDrop(v);
       for(const c of coinDrops){ const bob=Math.sin(gt*6+c.x*.12)*2;const yDraw=c.y+Math.min(0,bob);const k=c.kind==='silver'; ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.18;ctx.filter='blur(3px)';ctx.fillStyle=k?'#bfc9d6':'#e6c84a';ctx.beginPath();ctx.arc(c.x+7,yDraw+5,7,0,Math.PI*2);ctx.fill();ctx.filter='none';ctx.restore(); px(k?MAP.scoin:MAP.coin,k?COL.scoin:COL.coin,c.x,yDraw,2); }
       for(const s of splats) drawS(s);
@@ -960,7 +960,7 @@ drawWaveFlash();
   const killsCol=waveBossSpawned&&waveN<=10?'#ff88cc':'#ffe44a';
   uiRowRight([
     {t:'B:SHOP',c:'#6a8ba8'},
-    {t:'✦'+coinsN,c:'#ffd94a'},
+    {t:'$'+coinsN,c:'#ffd94a'},
     {t:killsLabel,c:killsCol},
     {t:'WAVE '+waveN,c:'#58c4ff'},
   ],W-6,14,8,'900',7);
