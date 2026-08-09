@@ -23,7 +23,7 @@ v0.2 Fixed minor bug and syntax errors, added new splash and water physics plus 
 
 v0.3 Major update to mobile UI and gameplay. Changed graphics, enemy AI actions and added new special item drop. Player now has the ability to gain invincibility when using artificial tears power-up. 
 
-v0.4 HUGE UPDATE added new enemy, new weapon, new layouts and changed game layout and playability
+v0.4 HUGE UPDATE added new enemy, new weapon, new layouts and changed game layout and playability 04/10/2026
 
 v0.5 Added code layout for sound effects, added jump sound effect - 08/01/2026
 
@@ -32,3 +32,5 @@ V0.6 Added shoot sound effect and item collection sound effect 8/01/2026
 v0.7 added background music 8/02/2026
 
 v0.8 added wave completion flash effects 8/06/2026
+
+v0.9 fixed wave animation, slowed down graphic, corrected incorrect code to fix spitter projectile and other incomplete code segments 8/09/2026
