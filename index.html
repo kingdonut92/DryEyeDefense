@@ -676,101 +676,76 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
     function ctrls(){ tutPage=0;reset(); }
     function toastDraw(){ if(toastT<=0||!toastS) return; const lines=toastS.split('\n'); const pad=8,lh=10,bw=220,bh=8+lines.length*lh,bx=Math.floor((W-bw)/2),by=6; ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(bx,by,bw,bh);ctx.strokeStyle='#58c4ff';ctx.strokeRect(bx,by,bw,bh); for(let i=0;i<lines.length;i++) uiTxt(lines[i],bx+pad,by+14+i*lh,8,'#8bd9ff','left','alphabetic','750'); }
 
-    function shopDraw(){
-      if(!shop||st!=='playing') return;
+    function drawShopPips(x,y,total,filled,col,dim){
+  const pipW=5,pipH=7,gap=2;
+  for(let i=0;i<total;i++){
+    const px1=x+i*(pipW+gap);
+    if(i<filled){ctx.fillStyle=col;ctx.fillRect(px1,y,pipW,pipH);}
+    else{ctx.strokeStyle=dim;ctx.lineWidth=1;ctx.strokeRect(px1+0.5,y+0.5,pipW-1,pipH-1);}
+  }
+}
 
-      // Dim backdrop
-      ctx.fillStyle='rgba(0,0,0,.82)';ctx.fillRect(0,0,W,H);
+function shopDraw(){
+  if(!shop||st!=='playing') return;
 
-      const pw=252,ph=192,px0=Math.round((W-pw)/2),py0=Math.round((H-ph)/2);
+  ctx.fillStyle='rgba(0,0,0,.85)';ctx.fillRect(0,0,W,H);
 
-      // Animated background gradient
-      const shopHue=((gt*40)%360);
-      const bgG=ctx.createLinearGradient(px0,py0,px0+pw,py0+ph);
-      bgG.addColorStop(0,`hsl(${shopHue},40%,8%)`);
-      bgG.addColorStop(1,`hsl(${(shopHue+80)%360},40%,10%)`);
-      ctx.fillStyle=bgG;ctx.fillRect(px0,py0,pw,ph);
+  const pw=296,ph=168,px0=Math.round((W-pw)/2),py0=Math.round((H-ph)/2);
 
-      // Glowing border — cycles colour
-      const borderCol=`hsl(${shopHue},90%,60%)`;
-      ctx.save();ctx.shadowColor=borderCol;ctx.shadowBlur=10;
-      ctx.strokeStyle=borderCol;ctx.lineWidth=1.5;ctx.strokeRect(px0,py0,pw,ph);
-      ctx.restore();
+  // Cabinet body + beveled border
+  ctx.fillStyle='#10161f';ctx.fillRect(px0,py0,pw,ph);
+  ctx.fillStyle='#3a4a5e';ctx.fillRect(px0,py0,pw,3);ctx.fillRect(px0,py0,3,ph);
+  ctx.fillStyle='#060a10';ctx.fillRect(px0,py0+ph-3,pw,3);ctx.fillRect(px0+pw-3,py0,3,ph);
+  ctx.strokeStyle='#58c4ff';ctx.lineWidth=2;ctx.strokeRect(px0+1,py0+1,pw-2,ph-2);
 
-      // Inner top accent bar
-      const accentG=ctx.createLinearGradient(px0,py0,px0+pw,py0);
-      accentG.addColorStop(0,`hsla(${shopHue},100%,60%,0)`);
-      accentG.addColorStop(0.4,`hsla(${shopHue},100%,65%,0.35)`);
-      accentG.addColorStop(1,`hsla(${(shopHue+60)%360},100%,65%,0)`);
-      ctx.fillStyle=accentG;ctx.fillRect(px0,py0,pw,4);
+  // Header bar
+  const headH=16;
+  ctx.fillStyle='#1a2432';ctx.fillRect(px0+3,py0+3,pw-6,headH);
+  ctx.fillStyle='#2a3a4e';ctx.fillRect(px0+3,py0+3+headH,pw-6,2);
+  const blink=(Math.floor(gt*2)%2)===0;
+  uiTxt('SHOP',px0+10,py0+3+headH-4,11,blink?'#ffe44a':'#ffcc00','left','alphabetic','900');
+  uiTxt('$'+coinsN,px0+pw-10,py0+3+headH-4,10,'#ffd94a','right','alphabetic','900');
 
-      // Title
-      const titleCol=`hsl(${(shopHue+120)%360},100%,68%)`;
-      uiTxt('SHOP',W/2,py0+16,13,titleCol,'center','alphabetic','900');
+  // Items
+  const itemH=14,itemsTop=py0+headH+6;
+  for(let i=0;i<ups.length;i++){
+    const u=ups[i];const sel=i===shopI;
+    const rowY=itemsTop+i*itemH,y=rowY+10;
 
-      // Coin display with sparkle colour
-      const coinCol=`hsl(${(shopHue+200)%360},100%,70%)`;
-      uiTxt('✦ '+coinsN+' coins',W/2,py0+29,8,coinCol,'center','alphabetic','700');
+    if(sel){ctx.fillStyle='#ffe44a';ctx.fillRect(px0+6,rowY,pw-12,itemH-2);}
+    else{ctx.strokeStyle='rgba(58,74,94,.5)';ctx.lineWidth=1;ctx.strokeRect(px0+6,rowY,pw-12,itemH-2);}
 
-      // Divider line
-      ctx.strokeStyle=`hsla(${shopHue},60%,50%,0.3)`;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(px0+12,py0+35);ctx.lineTo(px0+pw-12,py0+35);ctx.stroke();
+    // Number badge (real keyboard shortcut, not decoration)
+    ctx.strokeStyle=sel?'#10161f':'#3a5a78';ctx.lineWidth=1;
+    ctx.strokeRect(px0+9,rowY+2,10,10);
+    uiTxt(String(i+1),px0+14,rowY+11,7,sel?'#10161f':'#58c4ff','center','alphabetic','900');
 
-      // Items
-      const itemH=14;
-      let y=py0+44;
-      for(let i=0;i<ups.length;i++){
-        const u=ups[i];const sel=i===shopI;
+    uiTxt(u.label,px0+26,y,7.5,sel?'#10161f':'#c8e8ff','left','alphabetic','800');
 
-        // Selection highlight — animated gradient
-        if(sel){
-          const selH=(shopHue+160+i*25)%360;
-          const selG=ctx.createLinearGradient(px0+8,y-13,px0+pw-8,y-13);
-          selG.addColorStop(0,`hsla(${selH},80%,45%,0)`);
-          selG.addColorStop(0.3,`hsla(${selH},80%,45%,0.35)`);
-          selG.addColorStop(0.7,`hsla(${selH},80%,45%,0.35)`);
-          selG.addColorStop(1,`hsla(${selH},80%,45%,0)`);
-          ctx.fillStyle=selG;ctx.fillRect(px0+8,y-13,pw-16,itemH);
-          // left arrow indicator
-          ctx.fillStyle=`hsl(${selH},100%,70%)`;
-          ctx.fillRect(px0+4,y-7,3,3);
-        }
-
-        // Item colour — each item gets its own hue
-        const itemHue=(shopHue+i*55)%360;
-        let status='',col=sel?`hsl(${itemHue},100%,75%)`:`hsl(${itemHue},70%,58%)`;
-
-        if(u.repeat){
-          if(u.id==='tearRefill'){
-            status=`${tearRefillCost}¢`;
-            if(pl.tear>=MAXT){col='#556677';status='FULL';}
-          }else{
-            const act=pl.artT>0;const cdR=Math.max(0,pl.artCd-pl.artT);
-            status=act?`${Math.ceil(pl.artT)}s`:(pl.artCd>0?`CD${Math.ceil(cdR)}s`:`${u.cost}¢`);
-            if(act) col='#ffe44a';else if(pl.artCd>0) col='#556677';
-          }
-        }else{
-          const l=L(u),m=u.tiers.length,done=l>=m;
-          status=done?'MAX':`Lv${l+1} ${u.tiers[l].cost}¢`;
-          if(done) col='#445566';
-        }
-
-        // Label
-        uiTxt(u.label,px0+14,y,7.5,col,'left','alphabetic','700');
-        // Status badge — right aligned
-        const badgeCol=col==='#445566'||col==='#556677'?'#445566':`hsl(${itemHue},100%,62%)`;
-        uiTxt(status,px0+pw-12,y,7.5,badgeCol,'right','alphabetic','800');
-
-        y+=itemH;
+    if(u.repeat){
+      if(u.id==='tearRefill'){
+        if(pl.tear>=MAXT) uiTxt('FULL',px0+pw-10,y,7,sel?'#10161f':'#556677','right','alphabetic','900');
+        else uiTxt('$'+tearRefillCost,px0+pw-10,y,7.5,sel?'#10161f':'#ffd94a','right','alphabetic','900');
+      }else{
+        const act=pl.artT>0;const cdR=Math.max(0,pl.artCd-pl.artT);
+        const statTxt=act?Math.ceil(pl.artT)+'s':(pl.artCd>0?'CD'+Math.ceil(cdR)+'s':'$'+u.cost);
+        const statCol=act?'#ffe44a':(pl.artCd>0?(sel?'#10161f':'#556677'):(sel?'#10161f':'#ffd94a'));
+        uiTxt(statTxt,px0+pw-10,y,7.5,statCol,'right','alphabetic','900');
       }
-
-      // Bottom divider
-      ctx.strokeStyle=`hsla(${shopHue},60%,50%,0.3)`;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(px0+12,py0+ph-18);ctx.lineTo(px0+pw-12,py0+ph-18);ctx.stroke();
-
-      // Footer hint
-      uiTxt('▲▼ select  •  J buy  •  B close',W/2,py0+ph-7,6.5,'#445566','center','alphabetic','600');
+    }else{
+      const l=L(u),m=u.tiers.length,done=l>=m;
+      if(m>1){
+        drawShopPips(px0+pw-10-(m*7),rowY+4,m,l,sel?'#10161f':'#58ff88',sel?'rgba(16,22,31,.5)':'#3a5a78');
+      }else{
+        if(done) uiTxt('OWNED',px0+pw-10,y,7,sel?'#10161f':'#445566','right','alphabetic','900');
+        else uiTxt('$'+u.tiers[0].cost,px0+pw-10,y,7.5,sel?'#10161f':'#ffd94a','right','alphabetic','900');
+      }
     }
+  }
+
+  ctx.fillStyle='#2a3a4e';ctx.fillRect(px0+6,py0+ph-16,pw-12,1);
+  uiTxt('UP/DOWN SELECT   J BUY   B CLOSE',px0+pw/2,py0+ph-7,6.5,'#5a7086','center','alphabetic','700');
+}
     const seededRand=(seed)=>{let s=seed^0xdeadbeef;s=Math.imul(s^(s>>>16),0x45d9f3b);s=Math.imul(s^(s>>>16),0x45d9f3b);return((s^(s>>>16))>>>0)/0xffffffff;};
     const BOTTLE_COLS=['#5a3a2a','#2a4a3a','#3a3a5a','#5a4a2a','#4a2a3a','#2a3a4a','#3a4a2a','#4a3a4a','#3a2a4a','#4a4a2a'];
     const BOTTLE_CAPS=['#7a5a3a','#3a6a4a','#4a4a7a','#7a6a3a','#6a3a4a','#3a4a6a','#4a6a3a','#6a4a6a','#5a3a6a','#6a6a3a'];
