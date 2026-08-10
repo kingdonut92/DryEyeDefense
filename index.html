@@ -756,7 +756,7 @@ function shopDraw(){
         uiTxt(statTxt,px0+pw-8,ty,7,statCol,'right','alphabetic','900');
       }
     }else{
-      const l=L(u),m=u.tiers.length,done=l>=m;
+  const l=L(u),m=u.tiers.length,done=l>=m;
   if(m>1){
     drawShopPips(px0+pw-8-(m*7)-32,rowY+4,m,l,sel?'#ffffff':'#58ff88',sel?'rgba(255,255,255,.4)':'#3a5a78');
     if(done) uiTxt('MAX',px0+pw-8,ty,6.5,sel?'#ffffff':'#445566','right','alphabetic','900');
@@ -766,7 +766,6 @@ function shopDraw(){
     else uiTxt('$'+u.tiers[0].cost,px0+pw-8,ty,7,sel?'#ffffff':'#ffd94a','right','alphabetic','900');
   }
 }
-
   if(scroll>0) uiTxt('▲',px0+pw-14,listTop-2,7,'#5a7086','center','alphabetic','700');
   if(scroll+VIS<rows.length) uiTxt('▼',px0+pw-14,py0+ph-14,7,'#5a7086','center','alphabetic','700');
 
