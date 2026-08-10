@@ -34,3 +34,67 @@ v0.7 added background music 8/02/2026
 v0.8 added wave completion flash effects 8/06/2026
 
 v0.9 fixed wave animation, slowed down graphic, corrected incorrect code to fix spitter projectile and other incomplete code segments 8/09/2026
+
+NEW SHOP UI AGAIN
+kingdonut92
+kingdonut92
+authored
+now
+·
+Verified
+new shop UI
+kingdonut92
+kingdonut92
+authored
+10 minutes ago
+·
+Verified
+big ass pile of fixes, speeds, colors, PAUSE MENU ADDED lol
+kingdonut92
+kingdonut92
+authored
+14 minutes ago
+·
+Verified
+kill counter color change from yellow to red
+kingdonut92
+kingdonut92
+authored
+53 minutes ago
+·
+Verified
+update projectile of spitter to proper color and size
+kingdonut92
+kingdonut92
+authored
+1 hour ago
+·
+Verified
+fix spitter enemy mass spawn, only spawns post wave 3
+kingdonut92
+kingdonut92
+authored
+7 hours ago
+·
+Verified
+Update print statement from 'Hello' to 'Goodbye'
+kingdonut92
+kingdonut92
+authored
+8 hours ago
+·
+Verified
+Changed player HUD to smoother looking UI
+kingdonut92
+kingdonut92
+authored
+9 hours ago
+·
+Verified
+corrected incorrect code to fix spitter projectile and other bugs
+kingdonut92
+kingdonut92
+authored
+9 hours ago
+·
+v1.0 ^^^^^^^^^^^ All that. 8/09/2026
