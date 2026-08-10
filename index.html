@@ -743,11 +743,7 @@ function shopDraw(){
     if(sel){ctx.fillStyle=r.col;ctx.fillRect(px0+5,rowY,pw-10,rowH-3);}
     else{ctx.fillStyle='rgba(255,255,255,.03)';ctx.fillRect(px0+5,rowY,pw-10,rowH-3);}
 
-    ctx.strokeStyle=sel?'#ffffff':r.col;ctx.lineWidth=1;
-    ctx.strokeRect(px0+8,rowY+2,10,10);
-    uiTxt(String(r.i+1),px0+13,rowY+10,6.5,sel?'#ffffff':r.col,'center','middle','900');
-
-    uiTxt(u.label,px0+23,ty,7,sel?'#ffffff':'#dfeeff','left','alphabetic','800');
+    uiTxt(u.label,px0+11,ty,7,sel?'#ffffff':'#dfeeff','left','alphabetic','800');
 
     if(u.repeat){
       if(u.id==='tearRefill'){
