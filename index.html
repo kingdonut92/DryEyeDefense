@@ -677,8 +677,8 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
     function toastDraw(){ if(toastT<=0||!toastS) return; const lines=toastS.split('\n'); const pad=8,lh=10,bw=220,bh=8+lines.length*lh,bx=Math.floor((W-bw)/2),by=6; ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(bx,by,bw,bh);ctx.strokeStyle='#58c4ff';ctx.strokeRect(bx,by,bw,bh); for(let i=0;i<lines.length;i++) uiTxt(lines[i],bx+pad,by+14+i*lh,8,'#8bd9ff','left','alphabetic','750'); }
 
 const SHOP_GROUPS=[
-  {title:'UPGRADES',col:'#58c4ff',ids:['TearStorage','FasterFire','+1Heart','TearRefill']},
-  {title:'ABILITIES',col:'#ff8c4a',ids:['TearBomb','DoubleJump','NoBombCd','Slam','Shield']}
+  {title:'UPGRADES',col:'#58c4ff',ids:['tearDiscount','fasterFire','healHeart','tearRefill']},
+  {title:'ABILITIES',col:'#ff8c4a',ids:['tearBomb','doubleJump','noBombCd','slam','shield']}
 ];
 
 function drawShopPips(x,y,total,filled,col,dim){
