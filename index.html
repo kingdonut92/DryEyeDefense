@@ -160,13 +160,10 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
   const mobile=isMobile();
   let cssW,cssH;
   if(mobile){
-    const scaleX=m.aw/W;
-    const scaleY=m.ah/H;
-    const VERT_STRETCH=0.8;
-    const finalScaleY=Math.min(scaleY*VERT_STRETCH,scaleY*1.35);
-    cssW=Math.round(W*scaleX);
-    cssH=Math.round(H*finalScaleY);
-    S=scaleX;
+    const scale=Math.min(m.aw/W,m.ah/H);
+    cssW=Math.round(W*scale);
+    cssH=Math.round(H*scale);
+    S=scale;
   }else{
     let s=Math.floor(Math.min(m.aw/W,m.ah/H));
     s=Math.max(1,Math.min(s,12));
