@@ -99,3 +99,5 @@ authored
 ·
 
 v1.0 ^^^^^^^^^^^ All that. 8/09/2026
+
+v1.1 added landscape mode for mobile 8/11/2026
