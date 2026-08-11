@@ -184,11 +184,11 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
   const vis=panel&&getComputedStyle(panel).display!=='none';
   const overlay=vis&&getComputedStyle(panel).position==='fixed';
   const ph=(vis&&!overlay)?panel.getBoundingClientRect().height:0;
-  const vw=window.innerWidth||document.documentElement.clientWidth;
-  const vh=window.innerHeight||document.documentElement.clientHeight;
+  const vv=window.visualViewport;
+  const vw=(vv?vv.width:0)||window.innerWidth||document.documentElement.clientWidth;
+  const vh=(vv?vv.height:0)||window.innerHeight||document.documentElement.clientHeight;
   return {aw:Math.max(1,vw),ah:Math.max(1,vh-ph)};
 }
-
     function resize(){
   const m=measureAvail();
   const mobile=isMobile();
@@ -217,6 +217,9 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
 
     addEventListener('resize',resize,{passive:true});
     addEventListener('orientationchange',()=>{setTimeout(resize,100);},{passive:true});
+    if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',resize,{passive:true});
+}
     let roPend=false;
     const ro=new ResizeObserver(()=>{if(roPend) return;roPend=true;requestAnimationFrame(()=>{roPend=false;resize();});});
     ro.observe(stage);
