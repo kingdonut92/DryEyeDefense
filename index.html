@@ -38,6 +38,39 @@
     #action-btns button[data-action="bomb"]{background:radial-gradient(circle at 38% 32%,#22dd66,#116633);box-shadow:0 6px 0 #063318,inset 0 1px 0 rgba(255,255,255,.2),0 0 12px rgba(40,220,100,.3);border-top:2px solid #55ff99;border-left:2px solid #55ff99;border-right:2px solid #063318;border-bottom:2px solid #063318;color:#ccffe0;font-size:20px;}
     #action-btns button[data-action="bomb"].locked{background:radial-gradient(circle at 38% 32%,#2a3a2a,#1a221a);box-shadow:0 4px 0 #050f05,inset 0 1px 0 rgba(255,255,255,.05);border-top:2px solid #334433;border-left:2px solid #334433;border-right:2px solid #050f05;border-bottom:2px solid #050f05;}
     #action-btns button[data-action="bomb"]:active{box-shadow:0 1px 0 #063318,inset 0 3px 6px rgba(0,0,0,.4);}
+    @media (orientation:landscape) and (hover:none) and (pointer:coarse){
+  #touch-controls{
+    position:fixed;inset:0;
+    width:100%;height:100%;
+    display:flex;flex-direction:row;align-items:flex-end;justify-content:space-between;
+    padding:8px 10px;
+    background:none;border-top:none;
+    pointer-events:none;
+    gap:0;
+  }
+  #util-btns{
+    position:fixed;top:6px;left:50%;transform:translateX(-50%);
+    width:auto;flex-direction:row;
+    pointer-events:auto;
+    gap:8px;
+  }
+  #util-btns button{padding:3px 12px;font-size:9px;}
+  #bottom-controls{
+    display:contents;
+  }
+  #dpad{
+    pointer-events:auto;
+    opacity:0.82;
+    width:110px;height:110px;
+  }
+  #dpad button[data-action="left"],#dpad button[data-action="right"]{width:37px;height:37px;top:37px;}
+  #dpad button[data-action="up"],#dpad button[data-action="down"]{width:37px;height:37px;left:37px;}
+  #dpad-center{left:37px;top:37px;width:37px;height:37px;}
+  #action-btns{
+    pointer-events:auto;
+    opacity:0.82;
+  }
+}
   </style>
 </head>
 <body>
@@ -147,13 +180,14 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
 };
 
     function measureAvail(){
-      const panel=document.getElementById('touch-controls');
-      const vis=panel&&getComputedStyle(panel).display!=='none';
-      const ph=vis?panel.getBoundingClientRect().height:0;
-      const vw=window.innerWidth||document.documentElement.clientWidth;
-      const vh=window.innerHeight||document.documentElement.clientHeight;
-      return {aw:Math.max(1,vw),ah:Math.max(1,vh-ph)};
-    }
+  const panel=document.getElementById('touch-controls');
+  const vis=panel&&getComputedStyle(panel).display!=='none';
+  const overlay=vis&&getComputedStyle(panel).position==='fixed';
+  const ph=(vis&&!overlay)?panel.getBoundingClientRect().height:0;
+  const vw=window.innerWidth||document.documentElement.clientWidth;
+  const vh=window.innerHeight||document.documentElement.clientHeight;
+  return {aw:Math.max(1,vw),ah:Math.max(1,vh-ph)};
+}
 
     function resize(){
   const m=measureAvail();
