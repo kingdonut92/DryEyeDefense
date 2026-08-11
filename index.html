@@ -190,16 +190,17 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
   return {aw:Math.max(1,vw),ah:Math.max(1,vh-ph)};
 }
     function resize(){
+  const panel=document.getElementById('touch-controls');
   const m=measureAvail();
   const mobile=isMobile();
   let cssW,cssH;
   if(mobile){
-  const scale=Math.min(m.aw/W,m.ah/H);
-  cssW=Math.round(W*scale);
-  cssH=Math.round(H*scale);
-  S=scale;
-  showErr(`aw:${m.aw} ah:${m.ah} scale:${scale.toFixed(2)} cssW:${cssW} cssH:${cssH}`);
-}else{
+    const scale=Math.min(m.aw/W,m.ah/H);
+    cssW=Math.round(W*scale);
+    cssH=Math.round(H*scale);
+    S=scale;
+    showErr(`stageH:${stage.getBoundingClientRect().height} panelPos:${getComputedStyle(panel).position} panelH:${panel.getBoundingClientRect().height} | aw:${m.aw} ah:${m.ah} scale:${scale.toFixed(2)} cssW:${cssW} cssH:${cssH}`);
+  }else{
     let s=Math.floor(Math.min(m.aw/W,m.ah/H));
     s=Math.max(1,Math.min(s,12));
     cssW=W*s;cssH=H*s;S=s;
