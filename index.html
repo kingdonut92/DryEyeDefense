@@ -350,10 +350,10 @@ const uiRowRight=(segs,rightX,y,sizePx=9,wgt='800',gap=7)=>{
     }
 
     function spawnBoss(){
-  if(waveN>=3){
+  if(waveN>=4){
     if(!spitterGateOpen){spitterGateOpen=true;nextSpitter=kills+20;}
     if(kills>=nextSpitter){
-      nextSpitter=kills+20;
+      nextSpitter=kills+35;
       const sc=3,bw=MAP.boss[0].length*sc,bh=(MAP.boss.length-1)*sc;
       en.push({x:cx+W+40,y:162-bh,vx:0,vy:0,w:bw,h:bh,hitPad:3,type:'spitter',hp:8,isBig:false,isMini:false,shootCd:1.5+Math.random()*1.5});
       shake(2,0.2);
