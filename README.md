@@ -101,3 +101,5 @@ authored
 v1.0 ^^^^^^^^^^^ All that. 8/09/2026
 
 v1.1 added landscape mode for mobile 8/11/2026
+
+v1.2 redrew app icon art, uploaded music i originally composed for the game and removed placeholder 8/15/2026 
